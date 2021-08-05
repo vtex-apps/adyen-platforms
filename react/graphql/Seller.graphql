@@ -1,0 +1,56 @@
+query Seller($sellerId: String) {
+  seller(sellerId: $sellerId) {
+    id
+    name
+    logo
+    isActive
+    fulfillmentEndpoint
+    allowHybridPayments
+    taxCode
+    email
+    description
+    sellerCommissionConfiguration
+    catalogSystemEndpoint
+    isBetterScope
+    sellerType
+    availableSalesChannels {
+      isSelected
+      id
+      name
+    }
+    CSCIdentification
+    account
+    channel
+    salesChannel
+    isVtex
+    score
+    exchangeReturnPolicy
+    deliveryPolicy
+    securityPrivacyPolicy
+    fulfillmentSellerId
+    trustPolicy
+    adyenOnboarding {
+      urlToken
+      onboardComplete
+    }
+    adyenAccountHolder {
+      accountHolderCode
+      accountHolderStatus {
+        status
+        processingState {
+          disabled
+        }
+        payoutState {
+          disabled
+        }
+      }
+      accounts {
+        accountCode
+        payoutSchedule {
+          schedule
+        }
+        status
+      }
+    }
+  }
+}

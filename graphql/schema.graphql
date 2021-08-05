@@ -1,0 +1,143 @@
+type Seller {
+  id: String
+  name: String
+  logo: String
+  isActive: Boolean
+  fulfillmentEndpoint: String
+  allowHybridPayments: Boolean
+  taxCode: String
+  email: String
+  description: String
+  sellerCommissionConfiguration: String
+  catalogSystemEndpoint: String
+  isBetterScope: Boolean
+  sellerType: Int
+  availableSalesChannels: [SalesChannel]
+  CSCIdentification: String
+  account: String
+  channel: String
+  salesChannel: String
+  isVtex: Boolean
+  score: Int
+  exchangeReturnPolicy: String
+  deliveryPolicy: String
+  securityPrivacyPolicy: String
+  fulfillmentSellerId: String
+  trustPolicy: String
+  adyenOnboarding: Onboarding
+  adyenAccount: AdyenAccount
+  adyenAccountHolder: AdyenAccountHolder
+}
+
+type AdyenAccount {
+  sellerId: String
+  accountCode: String
+  status: String
+}
+
+type Onboarding {
+  accountHolderCode: String
+  onboardComplete: Boolean
+  urlToken: String
+}
+
+type SalesChannel {
+  isSelected: Boolean
+  id: Int
+  name: String
+}
+
+type AdyenAccountUpdate {
+  accountCode: String
+  schedule: String
+}
+
+type AdyenAccountHolder {
+  accountHolderCode: String
+  accountHolderStatus: AccountHolderStatus
+  accounts: [Account]
+  urlToken: String
+}
+
+type AccountHolderStatus {
+  status: String
+  processingState: AdyenProcessingState
+  payoutState: AdyenPayoutState
+}
+
+type AdyenProcessingState {
+  disabled: Boolean
+}
+
+type AdyenPayoutState {
+  allowPayout: Boolean
+  disabled: Boolean
+}
+
+type Account {
+  accountCode: String
+  description: String
+  payoutSchedule: PayoutSchedule
+  payoutSpeed: String
+  status: String
+}
+
+type PayoutSchedule {
+  schedule: String
+}
+
+type AccountSignatory {
+  name: String
+}
+
+# It is necessary to generate input types for creating books
+# ref: http://graphql.org/graphql-js/mutations-and-input-types/
+input AccountInput {
+  sellerId: String
+  country: String
+  legalBusinessName: String
+  email: String
+  legalEntity: String
+}
+
+input AccountHolderSignatoryInput {
+  accountHolderCode: String
+  firstName: String
+  lastName: String
+  jobTitle: String
+  dateOfBirth: String
+  city: String
+  country: String
+  houseNumberOrName: String
+  postalCode: String
+  street: String
+  stateOrProvince: String
+  email: String
+  fullPhoneNumber: String
+}
+
+type Query {
+  sellers: [Seller] @cacheControl(scope: PUBLIC, maxAge: SHORT)
+  seller(sellerId: String): Seller @cacheControl(scope: PUBLIC, maxAge: SHORT)
+  # Cache control can only be set at root fields
+  # book(id: ID!): Book
+  # books(from: Int = 0, to: Int = 4): [Book]
+  # total: Int
+
+  appSettings: String
+}
+
+type Mutation {
+  createAccountHolder(
+    accountHolderCode: String!
+    sellerId: String!
+    country: String!
+    legalBusinessName: String!
+    email: String!
+    legalEntity: String!
+  ): Onboarding
+  updateAccount(accountCode: String!, schedule: String!): AdyenAccountUpdate
+  addAccountHolderSignatory(
+    update: AccountHolderSignatoryInput!
+  ): AccountSignatory
+}

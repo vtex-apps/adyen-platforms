@@ -1,0 +1,31 @@
+{
+  "properties": {
+    "sellerId": {
+      "type": "string"
+    },
+    "accountHolderCode": {
+      "type": "string"
+    },
+    "accountCode": {
+      "type": "string",
+      "unique": true
+    },
+    "status": {
+      "type": "string"
+    }
+  },
+  "v-default-fields": [
+    "id",
+    "sellerId",
+    "accountHolderCode",
+    "accountCode",
+    "status"
+  ],
+  "required": ["sellerId", "accountHolderCode", "accountCode", "status"],
+  "v-indexed": ["sellerId", "accountHolderCode"],
+  "v-cache": false,
+  "v-security": {
+    "allowGetAll": true,
+    "publicRead": ["sellerId", "accountHolderCode", "accountCode", "status"]
+  }
+}

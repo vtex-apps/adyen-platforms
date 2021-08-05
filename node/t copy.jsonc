@@ -1,0 +1,23 @@
+{
+  "properties": {
+    "accountHolderCode": {
+      "type": "string",
+      "unique": true
+    },
+    "status": {
+      "type": "string"
+    },
+    "urlToken": {
+      "type": "string",
+      "unique": true
+    }
+  },
+  "v-default-fields": ["id", "accountHolderCode", "status", "urlToken"],
+  "required": ["accountHolderCode", "status", "urlToken"],
+  "v-indexed": ["accountHolderCode", "urlToken"],
+  "v-cache": false,
+  "v-security": {
+    "allowGetAll": true,
+    "publicRead": ["accountHolderCode", "status", "urlToken"]
+  }
+}

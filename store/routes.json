@@ -1,0 +1,6 @@
+{
+  "store.adyen-onboarding": {
+    "path": "/marketplace/onboard-complete",
+    "isSitemapEntry": false
+  }
+}

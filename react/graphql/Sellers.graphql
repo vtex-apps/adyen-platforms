@@ -1,0 +1,38 @@
+query Sellers {
+  sellers {
+    id
+    name
+    logo
+    isActive
+    fulfillmentEndpoint
+    allowHybridPayments
+    taxCode
+    email
+    description
+    sellerCommissionConfiguration
+    catalogSystemEndpoint
+    isBetterScope
+    sellerType
+    availableSalesChannels {
+      isSelected
+      id
+      name
+    }
+    CSCIdentification
+    account
+    channel
+    salesChannel
+    isVtex
+    score
+    exchangeReturnPolicy
+    deliveryPolicy
+    securityPrivacyPolicy
+    fulfillmentSellerId
+    trustPolicy
+    adyenAccount {
+      sellerId
+      accountCode
+      status
+    }
+  }
+}

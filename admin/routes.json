@@ -1,0 +1,10 @@
+{
+  "admin.app.adyen-menu": {
+    "component": "AdyenMenu",
+    "path": "/admin/app/adyen-for-platforms"
+  },
+  "admin.app.seller-detail": {
+    "component": "SellerDetail",
+    "path": "/admin/app/adyen-for-platforms/:seller_id"
+  }
+}

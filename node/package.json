@@ -1,0 +1,21 @@
+{
+  "dependencies": {
+    "co-body": "^6.0.0",
+    "uuid": "^8.3.1"
+  },
+  "devDependencies": {
+    "@types/bluebird": "^3.5.25",
+    "@types/co-body": "^0.0.3",
+    "@types/node": "^12.0.0",
+    "@vtex/api": "6.44.0",
+    "@types/uuid": "^8.3.0",
+    "tslint": "^5.12.0",
+    "tslint-config-vtex": "^2.1.0",
+    "typescript": "3.9.7",
+    "vtex.adyen-platforms": "https://sdb--sandboxusdev.myvtex.com/_v/private/typings/linked/v1/vtex.adyen-platforms@0.0.1+build1625783692/public/@types/vtex.adyen-platforms"
+  },
+  "scripts": {
+    "lint": "tsc --noEmit && tslint -c tslint.json './**/*.ts'"
+  },
+  "version": "0.2.1"
+}

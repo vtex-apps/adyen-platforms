@@ -1,0 +1,6 @@
+{
+  "store.adyen-onboarding": {},
+  "onboardSuccess": {
+    "component": "OnboardSuccess"
+  }
+}

@@ -1,0 +1,19 @@
+mutation createAccountHolder(
+  $accountHolderCode: String!
+  $sellerId: String!
+  $country: String!
+  $legalBusinessName: String!
+  $email: String!
+  $legalEntity: String!
+) {
+  createAccountHolder(
+    accountHolderCode: $accountHolderCode
+    sellerId: $sellerId
+    country: $country
+    legalBusinessName: $legalBusinessName
+    email: $email
+    legalEntity: $legalEntity
+  ) @context(provider: "vtex.adyen-platforms") {
+    urlToken
+  }
+}

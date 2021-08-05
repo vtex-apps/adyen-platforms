@@ -1,0 +1,6 @@
+mutation updateAccount($accountCode: String!, $schedule: String!) {
+  updateAccount(accountCode: $accountCode, schedule: $schedule)
+    @context(provider: "vtex.adyen-platforms") {
+    schedule
+  }
+}

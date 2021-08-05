@@ -1,0 +1,110 @@
+{
+  "name": "adyen-platforms",
+  "vendor": "vtex",
+  "version": "0.0.1-beta.0",
+  "title": "Adyen-platforms",
+  "description": "Integration with Adyen for Platforms",
+  "mustUpdateAt": "2022-01-04",
+  "categories": [],
+  "dependencies": {
+    "vtex.styleguide": "9.x",
+    "vtex.apps-graphql": "2.x",
+    "vtex.store": "2.x",
+    "vtex.flex-layout": "0.x",
+    "vtex.rich-text": "0.x",
+    "vtex.store-graphql": "2.x",
+    "vtex.render-runtime": "8.x",
+    "vtex.css-handles": "0.x",
+    "vtex.store-sitemap": "2.x"
+  },
+  "builders": {
+    "docs": "0.x",
+    "graphql": "1.x",
+    "node": "6.x",
+    "react": "3.x",
+    "admin": "0.x",
+    "store": "0.x",
+    "messages": "1.x"
+  },
+  "scripts": {
+    "prereleasy": "bash lint.sh"
+  },
+  "credentialType": "absolute",
+  "billingOptions": {
+    "termsURL": "https://compliance.vtex.com/gdpr/policies/vtex-privacy-policy",
+    "support": {
+      "url": "https://support.vtex.com/hc/requests"
+    },
+    "free": true
+  },
+  "policies": [
+    {
+      "name": "colossus-fire-event"
+    },
+    {
+      "name": "colossus-write-logs"
+    },
+    {
+      "name": "graphql-query"
+    },
+    {
+      "name": "view-seller"
+    },
+    {
+      "name": "MarketplaceNetwork"
+    },
+    {
+      "name": "ADMIN_CRM"
+    },
+    {
+      "name": "POWER_USER_CRM"
+    },
+    {
+      "name": "save-seller"
+    },
+    {
+      "name": "outbound-access",
+      "attrs": {
+        "host": "cal-test.adyen.com",
+        "path": "/cal/services/*"
+      }
+    },
+    {
+      "name": "outbound-access",
+      "attrs": {
+        "host": "api.vtex.com",
+        "path": "/dataentities/*"
+      }
+    },
+    {
+      "name": "outbound-access",
+      "attrs": {
+        "host": "{{account}}.vtexpayments.com.br",
+        "path": "/*"
+      }
+    },
+    {
+      "name": "ViewPayments"
+    },
+    {
+      "name": "ManageStore"
+    },
+    {
+      "name": "ADMIN_DS"
+    },
+    {
+      "name": "outbound-access",
+      "attrs": {
+        "host": "{{account}}.vtexcommercestable.com.br",
+        "path": "/api/*"
+      }
+    },
+    {
+      "name": "vbase-read-write"
+    },
+    {
+      "name": "OMSViewer"
+    }
+  ],
+  "$schema": "https://raw.githubusercontent.com/vtex/node-vtex-api/master/gen/manifest.schema"
+}
