@@ -25,8 +25,14 @@ export const adyenMutations = {
   updateAccount: async (_: unknown, data: AccountUpdateDTO, ctx: Context) => {
     return service.account.updateAccount({ ctx, data })
   },
+}
 
-  // addAccountHolderSignatory: async (_: unknown, data: any, ctx: Context) => {
-  //   return service.account.updateAccountHolder({ ctx, data })
-  // },
+export const adyenQueries = {
+  getAccountHolder: async (
+    _: unknown,
+    data: { accountHolderCode: string },
+    ctx: Context
+  ) => {
+    return service.account.getAccountHolder({ ctx, data })
+  },
 }

@@ -37,37 +37,16 @@ export default class Adyen extends ExternalClient {
         }
       )
     } catch (err) {
+      console.log(err)
+
       return null
     }
   }
 
-  // public async updateAccountHolder({
-  //   data,
-  //   settings,
-  // }: any): Promise<any | null> {
-  //   try {
-  //     return await this.http.post(
-  //       `${this.getEndpoint(settings)}/Account/v6/updateAccountHolder
-  //       `,
-  //       data,
-  //       {
-  //         headers: {
-  //           'X-API-Key': settings.apiKey,
-  //           'X-Vtex-Use-Https': 'true',
-  //           'Content-Type': 'application/json',
-  //         },
-  //         metric: 'adyen-updateAccountHolder',
-  //       }
-  //     )
-  //   } catch (err) {
-  //     return null
-  //   }
-  // }
-
   public async getAccountHolder(
     accountHolderCode: string,
     settings: any
-  ): Promise<any | null> {
+  ): Promise<GetAccountHolderResponse | null> {
     try {
       return await this.http.post(
         `${this.getEndpoint(settings)}/Account/v6/getAccountHolder
@@ -82,7 +61,7 @@ export default class Adyen extends ExternalClient {
           metric: 'adyen-getAccountHolder',
         }
       )
-    } catch (err) {
+    } catch (_err) {
       return null
     }
   }
@@ -124,7 +103,13 @@ export default class Adyen extends ExternalClient {
         `${this.getEndpoint(settings)}/Hop/v6/getOnboardingUrl`,
         {
           ...data,
-          returnUrl: `https://${this.context.workspace}--${this.context.account}.myvtex.com/marketplace/onboard-complete/?account=${data.accountHolderCode}`,
+          returnUrl: `https://${
+            this.context.production ? `` : `${this.context.workspace}--`
+          }${
+            this.context.account
+          }.myvtex.com/marketplace/onboard-complete/?account=${
+            data.accountHolderCode
+          }`,
         },
         {
           headers: {

@@ -1,7 +1,7 @@
 import account from './account'
-import onboarding from './onboarding'
+import startOnboarding from './onboarding'
 
 export const routes = {
   account: [account],
-  onboarding: [onboarding],
+  onboarding: [startOnboarding],
 }

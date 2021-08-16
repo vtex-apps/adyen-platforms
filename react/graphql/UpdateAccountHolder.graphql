@@ -1,6 +1,0 @@
-mutation addAccountHolderSignatory($update: AccountHolderSignatoryInput!) {
-  addAccountHolderSignatory(update: $update)
-    @context(provider: "vtex.adyen-platforms") {
-    name
-  }
-}

@@ -86,12 +86,6 @@ type PayoutSchedule {
   schedule: String
 }
 
-type AccountSignatory {
-  name: String
-}
-
-# It is necessary to generate input types for creating books
-# ref: http://graphql.org/graphql-js/mutations-and-input-types/
 input AccountInput {
   sellerId: String
   country: String
@@ -100,29 +94,11 @@ input AccountInput {
   legalEntity: String
 }
 
-input AccountHolderSignatoryInput {
-  accountHolderCode: String
-  firstName: String
-  lastName: String
-  jobTitle: String
-  dateOfBirth: String
-  city: String
-  country: String
-  houseNumberOrName: String
-  postalCode: String
-  street: String
-  stateOrProvince: String
-  email: String
-  fullPhoneNumber: String
-}
-
 type Query {
   sellers: [Seller] @cacheControl(scope: PUBLIC, maxAge: SHORT)
   seller(sellerId: String): Seller @cacheControl(scope: PUBLIC, maxAge: SHORT)
-  # Cache control can only be set at root fields
-  # book(id: ID!): Book
-  # books(from: Int = 0, to: Int = 4): [Book]
-  # total: Int
+  getAccountHolder(accountHolderCode: String): AdyenAccountHolder
+    @cacheControl(scope: PUBLIC, maxAge: MEDIUM)
 
   appSettings: String
 }
@@ -136,8 +112,7 @@ type Mutation {
     email: String!
     legalEntity: String!
   ): Onboarding
+  onboardingComplete(accountHolderCode: String!): Onboarding
+  refreshOnboarding(accountHolderCode: String!): Onboarding
   updateAccount(accountCode: String!, schedule: String!): AdyenAccountUpdate
-  addAccountHolderSignatory(
-    update: AccountHolderSignatoryInput!
-  ): AccountSignatory
 }

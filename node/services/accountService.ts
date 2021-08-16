@@ -6,6 +6,8 @@ import type {
 } from '../api/resolvers/adyen'
 import { settings } from '../utils'
 
+const ONE_DAY = 86400000 as const
+
 export default {
   createAccountHolder: async ({
     ctx,
@@ -38,7 +40,7 @@ export default {
     if (!adyenAccount) return
 
     const urlToken = uuidv4()
-
+    const expirationTimestamp = Date.now() + 7 * ONE_DAY
     const { accountHolderCode, accountHolderStatus, accountCode } = adyenAccount
 
     await ctx.clients.onboarding.create({
@@ -46,6 +48,7 @@ export default {
         accountHolderCode,
         onboardComplete: false,
         urlToken,
+        expirationTimestamp,
       },
     })
 
@@ -64,6 +67,20 @@ export default {
       urlToken,
     }
   },
+  getAccountHolder: async ({
+    ctx,
+    data,
+  }: {
+    ctx: Context
+    data: { accountHolderCode: string }
+  }) => {
+    const adyenAccountHolder = await ctx.clients.adyenClient.getAccountHolder(
+      data.accountHolderCode,
+      await settings(ctx)
+    )
+
+    return adyenAccountHolder
+  },
   updateAccount: async ({
     ctx,
     data,
@@ -81,65 +98,6 @@ export default {
       schedule: response.payoutSchedule.schedule,
     }
   },
-  // updateAccountHolder: async ({ ctx, data }: { ctx: Context; data: any }) => {
-  //   const {
-  //     update: {
-  //       accountHolderCode,
-  //       firstName,
-  //       lastName,
-  //       jobTitle,
-  //       dateOfBirth,
-  //       city,
-  //       country,
-  //       houseNumberOrName,
-  //       postalCode,
-  //       street,
-  //       stateOrProvince,
-  //       email,
-  //       fullPhoneNumber,
-  //     },
-  //   } = data
-
-  //   const update = {
-  //     accountHolderCode,
-  //     accountHolderDetails: {
-  //       businessDetails: {
-  //         signatories: [
-  //           {
-  //             name: {
-  //               firstName,
-  //               lastName,
-  //             },
-  //             jobTitle,
-  //             personalData: {
-  //               dateOfBirth,
-  //             },
-  //             address: {
-  //               city,
-  //               country,
-  //               houseNumberOrName,
-  //               postalCode,
-  //               street,
-  //               stateOrProvince,
-  //             },
-  //             email,
-  //             fullPhoneNumber,
-  //           },
-  //         ],
-  //       },
-  //     },
-  //   }
-
-  //   console.log('update req ==>', update)
-  //   const response = await ctx.clients.adyenClient.updateAccountHolder({
-  //     settings: await settings(ctx),
-  //     data: update,
-  //   })
-
-  //   console.log('update resp ==>', JSON.stringify(response))
-
-  //   return true
-  // },
   findBySellerId: async ({
     ctx,
     sellerIds,

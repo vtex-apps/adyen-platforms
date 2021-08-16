@@ -1,0 +1,5 @@
+mutation OnboardingComplete($accountHolderCode: String!) {
+  onboardingComplete(accountHolderCode: $accountHolderCode) {
+    accountHolderCode
+  }
+}

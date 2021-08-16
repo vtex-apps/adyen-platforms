@@ -15,19 +15,33 @@ const ONBOARDING_SCHEMA = {
       type: 'string',
       unique: true,
     },
+    expirationTimestamp: {
+      type: 'number',
+    },
   },
   'v-default-fields': [
     'id',
     'accountHolderCode',
     'onboardComplete',
     'urlToken',
+    'expirationTimestamp',
   ],
-  required: ['accountHolderCode', 'onboardComplete', 'urlToken'],
+  required: [
+    'accountHolderCode',
+    'onboardComplete',
+    'urlToken',
+    'expirationTimestamp',
+  ],
   'v-indexed': ['accountHolderCode', 'urlToken'],
   'v-cache': false,
   'v-security': {
     allowGetAll: true,
-    publicRead: ['accountHolderCode', 'onboardComplete', 'urlToken'],
+    publicRead: [
+      'accountHolderCode',
+      'onboardComplete',
+      'urlToken',
+      'expirationTimestamp',
+    ],
   },
 }
 
@@ -44,6 +58,24 @@ export class Onboarding extends MasterData {
     }
   }
 
+  public async update(
+    id: string,
+    data: { [key: string]: string | boolean | number }
+  ) {
+    await this.checkSchema()
+
+    try {
+      return await this.updatePartialDocument({
+        id,
+        dataEntity: DATA_ENTITY,
+        fields: data,
+        schema: ONBOARDING_SCHEMA_VERSION,
+      })
+    } catch (err) {
+      return null
+    }
+  }
+
   public async create({
     data,
   }: {
@@ -51,6 +83,7 @@ export class Onboarding extends MasterData {
       accountHolderCode: string
       onboardComplete: boolean
       urlToken: string
+      expirationTimestamp: number
     }
   }) {
     await this.checkSchema()
@@ -69,9 +102,15 @@ export class Onboarding extends MasterData {
     const [key] = Object.keys(data)
 
     try {
-      const response = await this.searchDocuments<IOnboarding>({
+      const response = await this.searchDocuments<Ionboarding>({
         dataEntity: DATA_ENTITY,
-        fields: ['accountHolderCode', 'onboardComplete', 'urlToken'],
+        fields: [
+          'id',
+          'accountHolderCode',
+          'onboardComplete',
+          'urlToken',
+          'expirationTimestamp',
+        ],
         pagination: { page: 1, pageSize: 100 },
         schema: ONBOARDING_SCHEMA_VERSION,
         where: `${key}=${data[key]}`,
@@ -84,8 +123,10 @@ export class Onboarding extends MasterData {
   }
 }
 
-interface IOnboarding {
+interface Ionboarding {
+  id: string
   accountHolderCode: string
   onboardComplete: boolean
   urlToken: string
+  expirationTimestamp: number
 }

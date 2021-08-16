@@ -4,6 +4,18 @@ interface CreateAccountHolderRequest {
   legalEntity: string
 }
 
+interface GetAccountHolderResponse {
+  accountHolderCode: string
+  accountHolderDetails: AccountHolderDetails
+  accountHolderStatus: AccountHolderStatus
+  legalEntity: string
+  verification: {
+    accountHolder: {
+      checks: Check[]
+    }
+  }
+}
+
 interface GetOnboardingUrlRequest {
   accountHolderCode: string
 }
