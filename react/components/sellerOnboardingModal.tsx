@@ -20,7 +20,11 @@ import { useMutation } from 'react-apollo'
 
 import CREATE_ACCOUNT_HOLDER from '../graphql/CreateAccountHolder.graphql'
 
-const SellerModal: FC<any> = ({ data, setOnboardToken, disabled }) => {
+const SellerOnboardingModal: FC<any> = ({
+  data,
+  setOnboardToken,
+  disabled,
+}) => {
   const [legalBusinessName, setLegalBusinessName] = useState('')
   const [email, setEmail] = useState('')
   const [accountHolderCode, setAccountHolderCode] = useState(data.seller.id)
@@ -151,4 +155,4 @@ const SellerModal: FC<any> = ({ data, setOnboardToken, disabled }) => {
   )
 }
 
-export default SellerModal
+export default SellerOnboardingModal

@@ -8,40 +8,26 @@ const ONBOARDING_SCHEMA = {
       type: 'string',
       unique: true,
     },
-    onboardComplete: {
-      type: 'boolean',
-    },
     urlToken: {
-      type: 'string',
+      type: ['null', 'string'],
       unique: true,
     },
     expirationTimestamp: {
-      type: 'number',
+      type: ['null', 'number'],
     },
   },
   'v-default-fields': [
     'id',
     'accountHolderCode',
-    'onboardComplete',
     'urlToken',
     'expirationTimestamp',
   ],
-  required: [
-    'accountHolderCode',
-    'onboardComplete',
-    'urlToken',
-    'expirationTimestamp',
-  ],
+  required: ['accountHolderCode', 'urlToken', 'expirationTimestamp'],
   'v-indexed': ['accountHolderCode', 'urlToken'],
   'v-cache': false,
   'v-security': {
     allowGetAll: true,
-    publicRead: [
-      'accountHolderCode',
-      'onboardComplete',
-      'urlToken',
-      'expirationTimestamp',
-    ],
+    publicRead: ['accountHolderCode', 'urlToken', 'expirationTimestamp'],
   },
 }
 
@@ -60,7 +46,7 @@ export class Onboarding extends MasterData {
 
   public async update(
     id: string,
-    data: { [key: string]: string | boolean | number }
+    data: { [key: string]: string | boolean | number | null }
   ) {
     await this.checkSchema()
 
@@ -81,7 +67,6 @@ export class Onboarding extends MasterData {
   }: {
     data: {
       accountHolderCode: string
-      onboardComplete: boolean
       urlToken: string
       expirationTimestamp: number
     }
@@ -104,13 +89,7 @@ export class Onboarding extends MasterData {
     try {
       const response = await this.searchDocuments<Ionboarding>({
         dataEntity: DATA_ENTITY,
-        fields: [
-          'id',
-          'accountHolderCode',
-          'onboardComplete',
-          'urlToken',
-          'expirationTimestamp',
-        ],
+        fields: ['id', 'accountHolderCode', 'urlToken', 'expirationTimestamp'],
         pagination: { page: 1, pageSize: 100 },
         schema: ONBOARDING_SCHEMA_VERSION,
         where: `${key}=${data[key]}`,
@@ -126,7 +105,6 @@ export class Onboarding extends MasterData {
 interface Ionboarding {
   id: string
   accountHolderCode: string
-  onboardComplete: boolean
   urlToken: string
   expirationTimestamp: number
 }

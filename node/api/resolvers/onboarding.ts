@@ -1,5 +1,7 @@
 import { v4 as uuidv4 } from 'uuid'
 
+const ONE_DAY = 86400000 as const
+
 export const onboardingMutations = {
   onboardingComplete: async (
     _: unknown,
@@ -14,7 +16,8 @@ export const onboardingMutations = {
 
     await ctx.clients.onboarding.update(id, {
       ...update,
-      onboardComplete: true,
+      urlToken: null,
+      expirationTimestamp: null,
     })
   },
   refreshOnboarding: async (
@@ -28,11 +31,13 @@ export const onboardingMutations = {
 
     const { id, ...update } = onboarding
 
+    update.urlToken = uuidv4()
+
     await ctx.clients.onboarding.update(id, {
       ...update,
-      onboardComplete: false,
-      urlToken: uuidv4(),
-      expirationTimestamp: Date.now(),
+      expirationTimestamp: Date.now() + 7 * ONE_DAY,
     })
+
+    return update
   },
 }

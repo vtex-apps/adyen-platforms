@@ -5,22 +5,22 @@ import {
   Box,
   Set,
   Heading,
-  Text,
-  IconSuccessColorful,
-  IconWarningColorful,
+  // Text,
+  // IconSuccessColorful,
+  // IconWarningColorful,
 } from '@vtex/admin-ui'
 
 const SellerDetailTitle: FC<any> = ({ seller }: any) => {
   if (!seller) return null
 
-  const accountHolderStatus =
-    seller.adyenAccountHolder?.accountHolderStatus || null
+  // const accountHolderStatus =
+  //   seller.adyenAccountHolder?.accountHolderStatus || null
 
   return (
     <Box>
       <Set orientation="vertical" spacing={3} fluid>
         <Heading>{seller.name}</Heading>
-        <Box>
+        {/* <Box>
           <Set spacing={8}>
             <Set csx={{ alignItems: 'center' }} orientation="vertical">
               <Text variant="highlight">Account</Text>
@@ -72,7 +72,7 @@ const SellerDetailTitle: FC<any> = ({ seller }: any) => {
               )}
             </Set>
           </Set>
-        </Box>
+        </Box> */}
       </Set>
     </Box>
   )

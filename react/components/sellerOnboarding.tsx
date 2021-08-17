@@ -1,5 +1,5 @@
 /* eslint-disable import/order */
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import type { FC } from 'react'
 
 import {
@@ -16,24 +16,70 @@ import {
 } from '@vtex/admin-ui'
 import { useRuntime } from 'vtex.render-runtime'
 
-import SellerModal from './sellerModal'
+import SellerOnboardingModal from './sellerOnboardingModal'
+import { useMutation } from 'react-apollo'
+import REFRESH_ONBOARDING from '../graphql/RefreshOnboarding.graphql'
 
 const SellerOnboarding: FC<any> = ({ data }) => {
   const [onboardUrl, setOnboardUrl] = useState('')
   const [onboardToken, setOnboardToken] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
   const { workspace, binding, production } = useRuntime()
+  const [refreshOnboarding] = useMutation(REFRESH_ONBOARDING)
 
-  if (
-    !onboardUrl &&
-    (onboardToken || data?.seller?.adyenOnboarding?.urlToken)
-  ) {
-    const token = onboardToken || data.seller.adyenOnboarding.urlToken
+  useEffect(() => {
+    if (onboardToken) {
+      setOnboardUrl(
+        `https://${production ? '' : `${workspace}--`}${
+          binding?.canonicalBaseAddress.split('/')[0]
+        }/_v/api/adyen-platforms/v0/onboarding?token=${onboardToken}`
+      )
+    }
+  }, [
+    binding?.canonicalBaseAddress,
+    onboardToken,
+    onboardUrl,
+    production,
+    workspace,
+  ])
 
-    setOnboardUrl(
-      `https://${production ? '' : `${workspace}--`}${
-        binding?.canonicalBaseAddress.split('/')[0]
-      }/_v/api/adyen-platforms/v0/onboarding?token=${token}`
-    )
+  if (!onboardToken && data?.seller?.adyenOnboarding?.urlToken) {
+    setOnboardToken(data?.seller?.adyenOnboarding?.urlToken)
+  }
+
+  const handleRefresh = async () => {
+    setIsLoading(true)
+
+    try {
+      const onboarding = await refreshOnboarding({
+        variables: {
+          accountHolderCode: data.seller.adyenAccountHolder.accountHolderCode,
+        },
+      })
+
+      setOnboardToken(onboarding.data.refreshOnboarding.urlToken)
+    } catch (error) {
+      console.log(error)
+      setIsLoading(false)
+
+      return
+    }
+
+    toast.dispatch({
+      type: 'success',
+      message: 'Onboarding link created',
+    })
+
+    setIsLoading(false)
+  }
+
+  const copyText = () => {
+    navigator.clipboard.writeText(onboardUrl)
+
+    toast.dispatch({
+      type: 'success',
+      message: 'Copied to clipboard',
+    })
   }
 
   return (
@@ -46,11 +92,22 @@ const SellerOnboarding: FC<any> = ({ data }) => {
               Create a new account and provide the generated link to the account
               holder.
             </Paragraph>
-            <SellerModal
-              data={data}
-              setOnboardToken={setOnboardToken}
-              disabled={!!onboardUrl}
-            />
+            <Set>
+              <SellerOnboardingModal
+                data={data}
+                setOnboardToken={setOnboardToken}
+                disabled={data?.seller?.adyenAccountHolder}
+              />
+              {data?.seller?.adyenAccountHolder && (
+                <Button
+                  variant="primary"
+                  loading={isLoading}
+                  onClick={() => handleRefresh()}
+                >
+                  Create New Link
+                </Button>
+              )}
+            </Set>
             {onboardUrl && (
               <Box csx={{ maxWidth: '70%' }}>
                 <Input
@@ -62,14 +119,7 @@ const SellerOnboarding: FC<any> = ({ data }) => {
                     <Tooltip label="Copy link" placement="bottom">
                       <Button
                         csx={{ height: '100%' }}
-                        onClick={() => {
-                          navigator.clipboard.writeText(onboardUrl)
-
-                          toast.dispatch({
-                            type: 'success',
-                            message: 'Copied to clipboard',
-                          })
-                        }}
+                        onClick={() => copyText()}
                         icon={<IconDuplicate />}
                         disabled={!onboardUrl}
                         variant="tertiary"

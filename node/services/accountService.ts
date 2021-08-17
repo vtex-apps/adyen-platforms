@@ -30,6 +30,7 @@ export default {
         email,
       },
       legalEntity,
+      processingTier: 3,
     }
 
     const adyenAccount = await ctx.clients.adyenClient.createAccountHolder(
@@ -46,7 +47,6 @@ export default {
     await ctx.clients.onboarding.create({
       data: {
         accountHolderCode,
-        onboardComplete: false,
         urlToken,
         expirationTimestamp,
       },

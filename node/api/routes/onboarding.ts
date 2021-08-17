@@ -1,27 +1,22 @@
-import { settings } from '../../utils'
+import { service } from '../../services'
 
 const startOnboarding = async (ctx: Context) => {
   const { token: urlToken } = ctx.request.query
 
-  if (!urlToken || typeof urlToken !== 'string') {
-    return
+  if (!urlToken || typeof urlToken !== 'string') return
+
+  try {
+    const onboardingUrl = await service.onboarding.getOnboardingUrl(
+      ctx,
+      urlToken
+    )
+
+    if (!onboardingUrl) return
+
+    return ctx.redirect(onboardingUrl)
+  } catch (err) {
+    return (ctx.response.message = err.message)
   }
-
-  const onboarding = await ctx.clients.onboarding.find({ urlToken })
-
-  if (!onboarding) return
-
-  if (onboarding.expirationTimestamp < Date.now()) return
-
-  const adyenOnboarding = await ctx.clients.adyenClient.getOnboardingUrl({
-    data: { accountHolderCode: onboarding.accountHolderCode },
-    urlToken,
-    settings: await settings(ctx),
-  })
-
-  if (!adyenOnboarding?.redirectUrl) return
-
-  ctx.redirect(adyenOnboarding.redirectUrl)
 }
 
 export default startOnboarding
