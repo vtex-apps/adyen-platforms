@@ -39,6 +39,9 @@ export default {
     )
 
     if (!adyenAccount) return
+    if (adyenAccount.invalidFields?.length) {
+      return { invalidFields: adyenAccount.invalidFields }
+    }
 
     const urlToken = uuidv4()
     const expirationTimestamp = Date.now() + 7 * ONE_DAY
@@ -63,8 +66,8 @@ export default {
 
     return {
       accountHolderCode,
-      onboardComplete: false,
       urlToken,
+      invalidFields: null,
     }
   },
   getAccountHolder: async ({

@@ -31,7 +31,6 @@ query Seller($sellerId: String) {
     trustPolicy
     adyenOnboarding {
       urlToken
-      onboardComplete
     }
     adyenAccountHolder {
       accountHolderCode

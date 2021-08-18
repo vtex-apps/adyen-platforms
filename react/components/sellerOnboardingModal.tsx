@@ -15,6 +15,8 @@ import {
   toast,
   useModalState,
   useSelectState,
+  Alert,
+  IconErrorColorful,
 } from '@vtex/admin-ui'
 import { useMutation } from 'react-apollo'
 
@@ -29,6 +31,7 @@ const SellerOnboardingModal: FC<any> = ({
   const [email, setEmail] = useState('')
   const [accountHolderCode, setAccountHolderCode] = useState(data.seller.id)
   const [isLoading, setIsLoading] = useState(false)
+  const [errors, setErrors] = useState<any[]>([])
   const [createAccountHolder] = useMutation(CREATE_ACCOUNT_HOLDER)
   const publishModal = useModalState()
 
@@ -47,13 +50,50 @@ const SellerOnboardingModal: FC<any> = ({
     initialSelectedItem: legalEntities[0],
   })
 
+  const createAccount = async () => {
+    setErrors([])
+    setIsLoading(true)
+    let accountHolder = null
+
+    try {
+      accountHolder = await createAccountHolder({
+        variables: {
+          accountHolderCode,
+          sellerId: data.seller.id,
+          country: countryState.selectedItem?.id,
+          legalBusinessName,
+          email,
+          legalEntity: legalEntityState.selectedItem?.id,
+        },
+      })
+    } catch (error) {
+      console.log(error)
+    }
+
+    setIsLoading(false)
+
+    if (!accountHolder) {
+      return setErrors([{ errorDescription: 'Adyen account creation failed' }])
+    }
+
+    if (accountHolder.data.createAccountHolder.invalidFields) {
+      return setErrors(accountHolder.data.createAccountHolder.invalidFields)
+    }
+
+    setOnboardToken(accountHolder.data.createAccountHolder.urlToken)
+
+    toast.dispatch({
+      type: 'success',
+      message: 'Adyen account created',
+    })
+
+    publishModal.hide()
+  }
+
   return (
     <Set spacing={3}>
       <ModalDisclosure state={publishModal}>
-        <Button
-          disabled={disabled || data?.seller?.adyenOnboarding?.onboardComplete}
-          variant="primary"
-        >
+        <Button disabled={disabled} variant="primary">
           Create Adyen Account
         </Button>
       </ModalDisclosure>
@@ -107,45 +147,31 @@ const SellerOnboardingModal: FC<any> = ({
             value={email}
             onChange={e => setEmail(e.target.value)}
           />
+          {errors.length > 0 && (
+            <Alert
+              csx={{ marginTop: '15px' }}
+              type="error"
+              icon={<IconErrorColorful />}
+              visible={errors.length > 0}
+            >
+              {errors.map((error, i) => (
+                <div key={i}>{error.errorDescription}</div>
+              ))}
+            </Alert>
+          )}
         </StatelessModal.Content>
         <StatelessModal.Footer>
-          <ModalButton closeModalOnClick variant="secondary">
+          <ModalButton
+            onClick={() => setErrors([])}
+            closeModalOnClick
+            variant="secondary"
+          >
             Cancel
           </ModalButton>
           <ModalButton
             loading={isLoading}
             disabled={isLoading}
-            onClick={async () => {
-              setIsLoading(true)
-
-              try {
-                const accountHolder = await createAccountHolder({
-                  variables: {
-                    accountHolderCode,
-                    sellerId: data.seller.id,
-                    country: countryState.selectedItem?.id,
-                    legalBusinessName,
-                    email,
-                    legalEntity: legalEntityState.selectedItem?.id,
-                  },
-                })
-
-                setOnboardToken(accountHolder.data.createAccountHolder.urlToken)
-              } catch (error) {
-                console.log(error)
-                setIsLoading(false)
-
-                return
-              }
-
-              toast.dispatch({
-                type: 'success',
-                message: 'Adyen account created',
-              })
-
-              setIsLoading(false)
-              publishModal.hide()
-            }}
+            onClick={async () => createAccount()}
           >
             Create
           </ModalButton>

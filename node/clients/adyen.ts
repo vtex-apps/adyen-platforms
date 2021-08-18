@@ -36,8 +36,10 @@ export default class Adyen extends ExternalClient {
           metric: 'adyen-createAccountHolder',
         }
       )
-    } catch (err) {
-      console.log(err)
+    } catch (error) {
+      if (error.response?.data?.invalidFields) {
+        return error.response.data
+      }
 
       return null
     }

@@ -37,8 +37,12 @@ type AdyenAccount {
 
 type Onboarding {
   accountHolderCode: String
-  onboardComplete: Boolean
   urlToken: String
+  invalidFields: [InvalidFields]
+}
+
+type InvalidFields {
+  errorDescription: String
 }
 
 type SalesChannel {
