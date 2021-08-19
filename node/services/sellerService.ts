@@ -5,16 +5,22 @@ export default {
     const sellers = await ctx.clients.sellersClient.sellers()
     const adyenAccounts = await ctx.clients.account.all()
 
-    const response = sellers.map(seller => {
+    const response = sellers.reduce((prev, seller) => {
+      if (seller.account === ctx.vtex.account) return prev
+
       const adyenAccount = adyenAccounts.find(
         account => account.sellerId === seller.id
       )
 
-      return {
+      prev.push({
         ...seller,
         adyenAccount,
-      }
-    })
+      })
+
+      return prev
+    }, [] as any)
+
+    console.log(response)
 
     return response
   },
@@ -30,6 +36,12 @@ export default {
 
     const adyenOnboarding = await ctx.clients.onboarding.find({
       accountHolderCode: account.accountHolderCode,
+    })
+
+    console.log({
+      ...seller,
+      adyenOnboarding,
+      adyenAccountHolder,
     })
 
     return {

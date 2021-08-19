@@ -117,7 +117,7 @@ export default {
     console.log(response)
 
     if (
-      !response.accountHolderStatus ||
+      !response?.accountHolderStatus ||
       response.accountHolderStatus.status !== 'Closed'
     ) {
       return null
