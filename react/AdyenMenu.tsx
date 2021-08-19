@@ -46,14 +46,6 @@ const AdyenMenu: FC = () => {
         id: 'name',
         header: 'Name',
       },
-      // {
-      //   id: 'payoutDate',
-      //   header: 'Next Payout',
-      // },
-      // {
-      //   id: 'balance',
-      //   header: 'Balance',
-      // },
       {
         id: 'status',
         header: 'Status',

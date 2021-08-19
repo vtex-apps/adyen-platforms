@@ -43,6 +43,9 @@ query Seller($sellerId: String) {
           disabled
         }
       }
+      accountHolderDetails {
+        email
+      }
       accounts {
         accountCode
         payoutSchedule {

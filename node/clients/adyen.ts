@@ -45,6 +45,31 @@ export default class Adyen extends ExternalClient {
     }
   }
 
+  public async deleteAccountHolder(
+    accountHolderCode: string,
+    settings: any
+  ): Promise<any | null> {
+    try {
+      return await this.http.post<any>(
+        `${this.getEndpoint(settings)}/Account/v6/closeAccountHolder
+        `,
+        { accountHolderCode },
+        {
+          headers: {
+            'X-API-Key': settings.apiKey,
+            'X-Vtex-Use-Https': 'true',
+            'Content-Type': 'application/json',
+          },
+          metric: 'adyen-deleteAccountHolder',
+        }
+      )
+    } catch (error) {
+      console.log(error)
+
+      return null
+    }
+  }
+
   public async getAccountHolder(
     accountHolderCode: string,
     settings: any

@@ -65,13 +65,37 @@ export class Account extends MasterData {
     })
   }
 
+  public async update(
+    id: string,
+    data: { [key: string]: string | boolean | number | null }
+  ) {
+    await this.checkSchema()
+
+    try {
+      return await this.updatePartialDocument({
+        id,
+        dataEntity: DATA_ENTITY,
+        fields: data,
+        schema: ACCOUNT_SCHEMA_VERSION,
+      })
+    } catch (err) {
+      return null
+    }
+  }
+
   public async find(data: { [key: string]: string }) {
     try {
       const [key] = Object.keys(data)
 
       const accounts = await this.searchDocuments<IAdyenAccount>({
         dataEntity: DATA_ENTITY,
-        fields: ['sellerId', 'accountHolderCode', 'accountCode', 'status'],
+        fields: [
+          'id',
+          'sellerId',
+          'accountHolderCode',
+          'accountCode',
+          'status',
+        ],
         pagination: { page: 1, pageSize: 100 },
         where: `${key}=${data[key]}`,
         schema: ACCOUNT_SCHEMA_VERSION,
@@ -118,6 +142,7 @@ export class Account extends MasterData {
 }
 
 interface IAdyenAccount {
+  id: string
   sellerId: string
   accountHolderCode: string
   accountCode: string

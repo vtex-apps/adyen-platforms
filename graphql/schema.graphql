@@ -59,6 +59,7 @@ type AdyenAccountUpdate {
 type AdyenAccountHolder {
   accountHolderCode: String
   accountHolderStatus: AccountHolderStatus
+  accountHolderDetails: AccountHolderDetails
   accounts: [Account]
   urlToken: String
 }
@@ -67,6 +68,10 @@ type AccountHolderStatus {
   status: String
   processingState: AdyenProcessingState
   payoutState: AdyenPayoutState
+}
+
+type AccountHolderDetails {
+  email: String
 }
 
 type AdyenProcessingState {
@@ -116,6 +121,7 @@ type Mutation {
     email: String!
     legalEntity: String!
   ): Onboarding
+  deleteAccountHolder(accountHolderCode: String!): Onboarding
   onboardingComplete(accountHolderCode: String!): Onboarding
   refreshOnboarding(accountHolderCode: String!): Onboarding
   updateAccount(accountCode: String!, schedule: String!): AdyenAccountUpdate

@@ -101,6 +101,40 @@ export default {
       schedule: response.payoutSchedule.schedule,
     }
   },
+  deleteAccountHolder: async ({
+    ctx,
+    data: { accountHolderCode },
+  }: {
+    ctx: Context
+    data: { accountHolderCode: string }
+  }) => {
+    console.log(accountHolderCode)
+    const response = await ctx.clients.adyenClient.deleteAccountHolder(
+      accountHolderCode,
+      await settings(ctx)
+    )
+
+    console.log(response)
+
+    if (
+      !response.accountHolderStatus ||
+      response.accountHolderStatus.status !== 'Closed'
+    ) {
+      return null
+    }
+
+    const account = await ctx.clients.account.find({ accountHolderCode })
+
+    console.log(account)
+
+    if (!account) return
+
+    const { id, ...update } = account
+
+    ctx.clients.account.update(id, { ...update, status: 'Closed' })
+
+    return response.accountHolderStatus
+  },
   findBySellerId: async ({
     ctx,
     sellerIds,
