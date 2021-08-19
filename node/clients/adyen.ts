@@ -45,7 +45,7 @@ export default class Adyen extends ExternalClient {
     }
   }
 
-  public async deleteAccountHolder(
+  public async closeAccountHolder(
     accountHolderCode: string,
     settings: any
   ): Promise<any | null> {

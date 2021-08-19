@@ -83,7 +83,8 @@ const SellerOnboarding: FC<any> = ({ data }) => {
   }
 
   const isActive =
-    data.seller.adyenAccountHolder.accountHolderStatus.status !== 'Closed'
+    data?.seller?.adyenAccountHolder &&
+    data.seller.adyenAccountHolder?.accountHolderStatus.status !== 'Closed'
 
   return (
     <Columns spacing={1}>
@@ -99,9 +100,9 @@ const SellerOnboarding: FC<any> = ({ data }) => {
               <SellerOnboardingModal
                 data={data}
                 setOnboardToken={setOnboardToken}
-                disabled={data?.seller?.adyenAccountHolder && isActive}
+                disabled={isActive}
               />
-              {data?.seller?.adyenAccountHolder && (
+              {isActive && (
                 <Button
                   variant="primary"
                   loading={isLoading}

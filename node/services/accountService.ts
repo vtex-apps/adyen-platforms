@@ -101,7 +101,7 @@ export default {
       schedule: response.payoutSchedule.schedule,
     }
   },
-  deleteAccountHolder: async ({
+  closeAccountHolder: async ({
     ctx,
     data: { accountHolderCode },
   }: {
@@ -109,7 +109,7 @@ export default {
     data: { accountHolderCode: string }
   }) => {
     console.log(accountHolderCode)
-    const response = await ctx.clients.adyenClient.deleteAccountHolder(
+    const response = await ctx.clients.adyenClient.closeAccountHolder(
       accountHolderCode,
       await settings(ctx)
     )

@@ -1,0 +1,6 @@
+mutation closeAccountHolder($accountHolderCode: String!) {
+  closeAccountHolder(accountHolderCode: $accountHolderCode)
+    @context(provider: "vtex.adyen-platforms") {
+    urlToken
+  }
+}

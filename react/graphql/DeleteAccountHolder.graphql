@@ -1,6 +1,0 @@
-mutation deleteAccountHolder($accountHolderCode: String!) {
-  deleteAccountHolder(accountHolderCode: $accountHolderCode)
-    @context(provider: "vtex.adyen-platforms") {
-    urlToken
-  }
-}

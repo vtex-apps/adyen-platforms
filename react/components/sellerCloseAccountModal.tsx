@@ -16,17 +16,16 @@ import {
 } from '@vtex/admin-ui'
 import { useMutation } from 'react-apollo'
 
-import DELETE_ACCOUNT_HOLDER from '../graphql/DeleteAccountHolder.graphql'
+import CLOSE_ACCOUNT_HOLDER from '../graphql/CloseAccountHolder.graphql'
 
-const SellerDeleteAccountModal: FC<any> = ({ seller }) => {
+const SellerCloseAccountModal: FC<any> = ({ seller }) => {
   const [isLoading, setIsLoading] = useState(false)
-  const [deleteAccountHolder] = useMutation(DELETE_ACCOUNT_HOLDER)
+  const [deleteAccountHolder] = useMutation(CLOSE_ACCOUNT_HOLDER)
   const publishModal = useModalState()
 
-  const handleDelete = async () => {
+  const handleClose = async () => {
     setIsLoading(true)
     try {
-      console.log(seller.adyenAccountHolder.accountHolderCode)
       await deleteAccountHolder({
         variables: {
           accountHolderCode: seller.adyenAccountHolder.accountHolderCode,
@@ -59,14 +58,14 @@ const SellerDeleteAccountModal: FC<any> = ({ seller }) => {
         </Button>
       </ModalDisclosure>
       <StatelessModal
-        aria-label="Delete Adyen account modal"
+        aria-label="Close Adyen account modal"
         state={publishModal}
         size="regular"
         hideOnClickOutside={false}
       >
-        <StatelessModal.Header title="Delete Adyen Account" />
+        <StatelessModal.Header title="Close Adyen Account" />
         <StatelessModal.Content>
-          <Text>Delete the Adyen account associated with this seller.</Text>
+          <Text>Close the Adyen account associated with this seller.</Text>
           <Alert
             csx={{ marginTop: 6 }}
             type="warning"
@@ -84,9 +83,10 @@ const SellerDeleteAccountModal: FC<any> = ({ seller }) => {
           <ModalButton
             loading={isLoading}
             disabled={isLoading}
-            onClick={async () => handleDelete()}
+            variant="danger"
+            onClick={async () => handleClose()}
           >
-            Create
+            Close
           </ModalButton>
         </StatelessModal.Footer>
       </StatelessModal>
@@ -94,4 +94,4 @@ const SellerDeleteAccountModal: FC<any> = ({ seller }) => {
   )
 }
 
-export default SellerDeleteAccountModal
+export default SellerCloseAccountModal

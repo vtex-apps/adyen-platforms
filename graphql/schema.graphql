@@ -121,7 +121,7 @@ type Mutation {
     email: String!
     legalEntity: String!
   ): Onboarding
-  deleteAccountHolder(accountHolderCode: String!): Onboarding
+  closeAccountHolder(accountHolderCode: String!): Onboarding
   onboardingComplete(accountHolderCode: String!): Onboarding
   refreshOnboarding(accountHolderCode: String!): Onboarding
   updateAccount(accountCode: String!, schedule: String!): AdyenAccountUpdate

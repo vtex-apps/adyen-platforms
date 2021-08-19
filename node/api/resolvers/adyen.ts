@@ -22,12 +22,12 @@ export const adyenMutations = {
   ) => {
     return service.account.createAccountHolder({ ctx, data })
   },
-  deleteAccountHolder: async (
+  closeAccountHolder: async (
     _: unknown,
     data: { accountHolderCode: string },
     ctx: Context
   ) => {
-    return service.account.deleteAccountHolder({ ctx, data })
+    return service.account.closeAccountHolder({ ctx, data })
   },
   updateAccount: async (_: unknown, data: AccountUpdateDTO, ctx: Context) => {
     return service.account.updateAccount({ ctx, data })

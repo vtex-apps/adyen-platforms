@@ -2,10 +2,10 @@ import type { FC } from 'react'
 import React from 'react'
 import { Set, Columns, Heading, Text, Box } from '@vtex/admin-ui'
 
-import SellerDeleteAccountModal from './sellerDeleteAccountModal'
+import SellerCloseAccountModal from './sellerCloseAccountModal'
 
 const SellerAccountDetails: FC<any> = ({ seller }: any) => {
-  if (!seller) return null
+  if (!seller?.adyenAccountHolder?.accountHolderCode) return null
 
   return (
     <Columns spacing={1}>
@@ -41,7 +41,7 @@ const SellerAccountDetails: FC<any> = ({ seller }: any) => {
             </Set>
           </Set>
           <Box csx={{ marginTop: 6 }}>
-            <SellerDeleteAccountModal seller={seller} />
+            <SellerCloseAccountModal seller={seller} />
           </Box>
         </Box>
       </Columns.Item>

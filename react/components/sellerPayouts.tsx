@@ -86,6 +86,7 @@ const SellerPayouts: FC<any> = ({ seller }) => {
         </Box>
         <Button
           loading={isLoading}
+          disabled={!seller.adyenAccountHolder}
           variant="primary"
           csx={{ marginTop: '20px' }}
           onClick={async (_e: any) => {
