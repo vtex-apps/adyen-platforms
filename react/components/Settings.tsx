@@ -10,6 +10,7 @@ const Settings: FC<any> = () => {
   const [settingsState, setSettingsState] = useState({
     apiKey: '',
     productionAPI: '',
+    onboardingRedirectUrl: '',
   })
 
   const { data: settings } = useQuery(AppSettings, {
@@ -84,6 +85,18 @@ const Settings: FC<any> = () => {
             setSettingsState({
               ...settingsState,
               productionAPI: e.currentTarget.value,
+            })
+          }
+        />
+        <Input
+          id="redirectUrl"
+          label="Completed Onboarding Redirect URL"
+          helperText="After a seller has completed the Adyen onboarding process, you can choose to redirect them to a custom URL. Complete URL must be entered, for example: https://www.my-store.com/onboard-complete"
+          value={settingsState.onboardingRedirectUrl}
+          onChange={(e: React.FormEvent<HTMLInputElement>) =>
+            setSettingsState({
+              ...settingsState,
+              onboardingRedirectUrl: e.currentTarget.value,
             })
           }
         />

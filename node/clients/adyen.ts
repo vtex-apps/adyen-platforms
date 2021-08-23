@@ -3,12 +3,6 @@ import { ExternalClient, InstanceOptions, IOContext } from '@vtex/api'
 
 const TEST_URL = 'https://cal-test.adyen.com/cal/services' as const
 
-interface GetOnboardingUrlArgs {
-  data: GetOnboardingUrlRequest
-  urlToken: string
-  settings: any
-}
-
 export default class Adyen extends ExternalClient {
   constructor(protected context: IOContext, options?: InstanceOptions) {
     super('', context, options)
@@ -124,20 +118,11 @@ export default class Adyen extends ExternalClient {
   public async getOnboardingUrl({
     data,
     settings,
-  }: GetOnboardingUrlArgs): Promise<GetOnboardingUrlResponse | null> {
+  }: any): Promise<GetOnboardingUrlResponse | null> {
     try {
       return await this.http.post(
         `${this.getEndpoint(settings)}/Hop/v6/getOnboardingUrl`,
-        {
-          ...data,
-          returnUrl: `https://${
-            this.context.production ? `` : `${this.context.workspace}--`
-          }${
-            this.context.account
-          }.myvtex.com/marketplace/onboard-complete/?account=${
-            data.accountHolderCode
-          }`,
-        },
+        data,
         {
           headers: {
             'X-API-Key': settings.apiKey,
