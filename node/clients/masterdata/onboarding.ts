@@ -97,6 +97,8 @@ export class Onboarding extends MasterData {
 
       return response[0] || null
     } catch (err) {
+      console.log(err)
+
       return null
     }
   }

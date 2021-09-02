@@ -22,14 +22,10 @@ import { useMutation } from 'react-apollo'
 
 import CREATE_ACCOUNT_HOLDER from '../graphql/CreateAccountHolder.graphql'
 
-const SellerOnboardingModal: FC<any> = ({
-  data,
-  setOnboardToken,
-  disabled,
-}) => {
+const SellerOnboardingModal: FC<any> = ({ seller, dispatch, disabled }) => {
   const [legalBusinessName, setLegalBusinessName] = useState('')
   const [email, setEmail] = useState('')
-  const [accountHolderCode, setAccountHolderCode] = useState(data.seller.id)
+  const [accountHolderCode, setAccountHolderCode] = useState(seller?.id)
   const [isLoading, setIsLoading] = useState(false)
   const [errors, setErrors] = useState<any[]>([])
   const [createAccountHolder] = useMutation(CREATE_ACCOUNT_HOLDER)
@@ -53,13 +49,13 @@ const SellerOnboardingModal: FC<any> = ({
   const createAccount = async () => {
     setErrors([])
     setIsLoading(true)
-    let accountHolder = null
+    let response = null
 
     try {
-      accountHolder = await createAccountHolder({
+      response = await createAccountHolder({
         variables: {
           accountHolderCode,
-          sellerId: data.seller.id,
+          sellerId: seller.id,
           country: countryState.selectedItem?.id,
           legalBusinessName,
           email,
@@ -72,15 +68,22 @@ const SellerOnboardingModal: FC<any> = ({
 
     setIsLoading(false)
 
-    if (!accountHolder) {
+    if (!response?.data) {
       return setErrors([{ errorDescription: 'Adyen account creation failed' }])
     }
 
-    if (accountHolder.data.createAccountHolder.invalidFields) {
-      return setErrors(accountHolder.data.createAccountHolder.invalidFields)
+    const { invalidFields, onboarding, adyenAccountHolder } =
+      response.data.createAccountHolder
+
+    if (invalidFields) {
+      return setErrors(invalidFields)
     }
 
-    setOnboardToken(accountHolder.data.createAccountHolder.urlToken)
+    dispatch({
+      type: 'CREATE_ADYEN_ACCOUNT',
+      onboarding,
+      adyenAccountHolder,
+    })
 
     toast.dispatch({
       type: 'success',

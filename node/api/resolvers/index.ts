@@ -1,5 +1,5 @@
 import { adyenMutations, adyenQueries } from './adyen'
-import { onboardingMutations } from './onboarding'
+import { onboardingMutations, onboardingQueries } from './onboarding'
 import { sellerQueries } from './seller'
 
 export const resolvers = {
@@ -7,5 +7,5 @@ export const resolvers = {
     ...onboardingMutations,
     ...adyenMutations,
   },
-  Query: { ...sellerQueries, ...adyenQueries },
+  Query: { ...sellerQueries, ...onboardingQueries, ...adyenQueries },
 }

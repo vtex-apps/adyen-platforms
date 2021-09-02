@@ -7,7 +7,7 @@
     "@types/bluebird": "^3.5.25",
     "@types/co-body": "^0.0.3",
     "@types/node": "^12.0.0",
-    "@vtex/api": "6.44.0",
+    "@vtex/api": "6.45.3",
     "@types/uuid": "^8.3.0",
     "tslint": "^5.12.0",
     "tslint-config-vtex": "^2.1.0",

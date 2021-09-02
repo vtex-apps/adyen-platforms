@@ -20,26 +20,26 @@ export const adyenMutations = {
     data: CreateAccountHolderDTO,
     ctx: Context
   ) => {
-    return service.account.createAccountHolder({ ctx, data })
+    return service.adyen.createAccountHolder({ ctx, data })
   },
   closeAccountHolder: async (
     _: unknown,
     data: { accountHolderCode: string },
     ctx: Context
   ) => {
-    return service.account.closeAccountHolder({ ctx, data })
+    return service.adyen.closeAccountHolder({ ctx, data })
   },
   updateAccount: async (_: unknown, data: AccountUpdateDTO, ctx: Context) => {
-    return service.account.updateAccount({ ctx, data })
+    return service.adyen.updateAccount({ ctx, data })
   },
 }
 
 export const adyenQueries = {
-  getAccountHolder: async (
+  adyenAccountHolder: async (
     _: unknown,
-    data: { accountHolderCode: string },
+    data: { sellerId: string },
     ctx: Context
   ) => {
-    return service.account.getAccountHolder({ ctx, data })
+    return service.adyen.getAccountHolder({ ctx, data })
   },
 }

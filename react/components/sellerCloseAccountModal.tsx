@@ -18,7 +18,7 @@ import { useMutation } from 'react-apollo'
 
 import CLOSE_ACCOUNT_HOLDER from '../graphql/CloseAccountHolder.graphql'
 
-const SellerCloseAccountModal: FC<any> = ({ seller }) => {
+const SellerCloseAccountModal: FC<any> = ({ adyenAccountHolder }) => {
   const [isLoading, setIsLoading] = useState(false)
   const [deleteAccountHolder] = useMutation(CLOSE_ACCOUNT_HOLDER)
   const publishModal = useModalState()
@@ -28,7 +28,7 @@ const SellerCloseAccountModal: FC<any> = ({ seller }) => {
     try {
       await deleteAccountHolder({
         variables: {
-          accountHolderCode: seller.adyenAccountHolder.accountHolderCode,
+          accountHolderCode: adyenAccountHolder.accountHolderCode,
         },
       })
     } catch (error) {
@@ -49,12 +49,10 @@ const SellerCloseAccountModal: FC<any> = ({ seller }) => {
     <Set spacing={3}>
       <ModalDisclosure state={publishModal}>
         <Button
-          disabled={
-            seller.adyenAccountHolder.accountHolderStatus.status === 'Closed'
-          }
+          disabled={adyenAccountHolder.accountHolderStatus?.status === 'Closed'}
           variant="danger"
         >
-          Delete Account
+          Close Account
         </Button>
       </ModalDisclosure>
       <StatelessModal

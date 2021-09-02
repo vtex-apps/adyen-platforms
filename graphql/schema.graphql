@@ -34,6 +34,10 @@ type AdyenAccount {
   accountCode: String
   status: String
 }
+type GetAdyenAccount {
+  onboarding: Onboarding
+  accountHolder: AdyenAccountHolder
+}
 
 type Onboarding {
   accountHolderCode: String
@@ -54,6 +58,12 @@ type SalesChannel {
 type AdyenAccountUpdate {
   accountCode: String
   schedule: String
+}
+
+type AdyenAccountStatus {
+  adyenAccountHolder: AdyenAccountHolder
+  onboarding: Onboarding
+  invalidFields: [InvalidFields]
 }
 
 type AdyenAccountHolder {
@@ -106,7 +116,10 @@ input AccountInput {
 type Query {
   sellers: [Seller] @cacheControl(scope: PUBLIC, maxAge: SHORT)
   seller(sellerId: String): Seller @cacheControl(scope: PUBLIC, maxAge: SHORT)
-  getAccountHolder(accountHolderCode: String): AdyenAccountHolder
+  adyenAccountHolder(sellerId: String): AdyenAccountHolder
+  getAdyenAccount(accountHolderCode: String): AdyenAccountHolder
+    @cacheControl(scope: PUBLIC, maxAge: MEDIUM)
+  onboarding(accountHolderCode: String): Onboarding
     @cacheControl(scope: PUBLIC, maxAge: MEDIUM)
 
   appSettings: String
@@ -120,7 +133,7 @@ type Mutation {
     legalBusinessName: String!
     email: String!
     legalEntity: String!
-  ): Onboarding
+  ): AdyenAccountStatus
   closeAccountHolder(accountHolderCode: String!): Onboarding
   onboardingComplete(accountHolderCode: String!): Onboarding
   refreshOnboarding(accountHolderCode: String!): Onboarding

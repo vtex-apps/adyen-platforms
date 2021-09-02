@@ -29,30 +29,5 @@ query Seller($sellerId: String) {
     securityPrivacyPolicy
     fulfillmentSellerId
     trustPolicy
-    adyenOnboarding {
-      urlToken
-    }
-    adyenAccountHolder {
-      accountHolderCode
-      accountHolderStatus {
-        status
-        processingState {
-          disabled
-        }
-        payoutState {
-          disabled
-        }
-      }
-      accountHolderDetails {
-        email
-      }
-      accounts {
-        accountCode
-        payoutSchedule {
-          schedule
-        }
-        status
-      }
-    }
   }
 }

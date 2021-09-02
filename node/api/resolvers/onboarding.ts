@@ -1,6 +1,4 @@
-import { v4 as uuidv4 } from 'uuid'
-
-const ONE_DAY = 86400000 as const
+import { service } from '../../services'
 
 export const onboardingMutations = {
   onboardingComplete: async (
@@ -25,19 +23,16 @@ export const onboardingMutations = {
     data: { accountHolderCode: string },
     ctx: Context
   ) => {
-    const onboarding = await ctx.clients.onboarding.find(data)
+    return service.onboarding.refreshOnboarding(ctx, data)
+  },
+}
 
-    if (!onboarding) return
-
-    const { id, ...update } = onboarding
-
-    update.urlToken = uuidv4()
-
-    await ctx.clients.onboarding.update(id, {
-      ...update,
-      expirationTimestamp: Date.now() + 7 * ONE_DAY,
-    })
-
-    return update
+export const onboardingQueries = {
+  onboarding: async (
+    _: unknown,
+    { accountHolderCode }: { accountHolderCode: string },
+    ctx: Context
+  ) => {
+    return service.onboarding.getOnboarding(ctx, accountHolderCode)
   },
 }

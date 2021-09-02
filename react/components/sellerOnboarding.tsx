@@ -1,5 +1,5 @@
 /* eslint-disable import/order */
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import type { FC } from 'react'
 
 import {
@@ -19,45 +19,48 @@ import { useRuntime } from 'vtex.render-runtime'
 import SellerOnboardingModal from './sellerOnboardingModal'
 import { useMutation } from 'react-apollo'
 import REFRESH_ONBOARDING from '../graphql/RefreshOnboarding.graphql'
+import { StateContext } from '../context/StateContext'
 
-const SellerOnboarding: FC<any> = ({ data }) => {
+const SellerOnboarding: FC<any> = () => {
+  const { seller, adyenAccountHolder, onboarding, dispatch } =
+    useContext(StateContext)
+
   const [onboardUrl, setOnboardUrl] = useState('')
-  const [onboardToken, setOnboardToken] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const { workspace, binding, production } = useRuntime()
   const [refreshOnboarding] = useMutation(REFRESH_ONBOARDING)
+  const { urlToken } = onboarding || {}
 
   useEffect(() => {
-    if (onboardToken) {
+    if (urlToken) {
       setOnboardUrl(
         `https://${production ? '' : `${workspace}--`}${
           binding?.canonicalBaseAddress.split('/')[0]
-        }/_v/api/adyen-platforms/v0/onboarding?token=${onboardToken}`
+        }/_v/api/adyen-platforms/v0/onboarding?token=${urlToken}`
       )
     }
   }, [
     binding?.canonicalBaseAddress,
-    onboardToken,
+    urlToken,
     onboardUrl,
     production,
     workspace,
   ])
 
-  if (!onboardToken && data?.seller?.adyenOnboarding?.urlToken) {
-    setOnboardToken(data?.seller?.adyenOnboarding?.urlToken)
-  }
-
   const handleRefresh = async () => {
     setIsLoading(true)
 
     try {
-      const onboarding = await refreshOnboarding({
+      const response = await refreshOnboarding({
         variables: {
-          accountHolderCode: data.seller.adyenAccountHolder.accountHolderCode,
+          accountHolderCode: adyenAccountHolder.accountHolderCode,
         },
       })
 
-      setOnboardToken(onboarding.data.refreshOnboarding.urlToken)
+      dispatch({
+        type: 'SET_ONBOARDING',
+        onboarding: response.data.refreshOnboarding,
+      })
     } catch (error) {
       console.log(error)
       setIsLoading(false)
@@ -83,8 +86,8 @@ const SellerOnboarding: FC<any> = ({ data }) => {
   }
 
   const isActive =
-    data?.seller?.adyenAccountHolder &&
-    data.seller.adyenAccountHolder?.accountHolderStatus.status !== 'Closed'
+    adyenAccountHolder &&
+    adyenAccountHolder.accountHolderStatus?.status !== 'Closed'
 
   return (
     <Columns spacing={1}>
@@ -98,8 +101,8 @@ const SellerOnboarding: FC<any> = ({ data }) => {
             </Paragraph>
             <Set>
               <SellerOnboardingModal
-                data={data}
-                setOnboardToken={setOnboardToken}
+                seller={seller}
+                dispatch={dispatch}
                 disabled={isActive}
               />
               {isActive && (

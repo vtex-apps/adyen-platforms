@@ -1,0 +1,9 @@
+query Onboarding($accountHolderCode: String) {
+  onboarding(accountHolderCode: $accountHolderCode) {
+    accountHolderCode
+    urlToken
+    invalidFields {
+      errorDescription
+    }
+  }
+}

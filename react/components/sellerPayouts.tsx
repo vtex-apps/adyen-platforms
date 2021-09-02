@@ -1,5 +1,5 @@
 import type { FC } from 'react'
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { useMutation } from 'react-apollo'
 import {
   Box,
@@ -14,6 +14,7 @@ import {
 } from '@vtex/admin-ui'
 
 import UPDATE_ACCOUNT from '../graphql/UpdateAccount.graphql'
+import { StateContext } from '../context/StateContext'
 
 const SCHEDULE_OPTIONS = [
   {
@@ -48,11 +49,12 @@ const SCHEDULE_OPTIONS = [
   },
 ]
 
-const SellerPayouts: FC<any> = ({ seller }) => {
+const SellerPayouts: FC<any> = () => {
+  const { adyenAccountHolder } = useContext(StateContext)
   const [isLoading, setIsLoading] = useState(false)
 
   const [updateAccount] = useMutation(UPDATE_ACCOUNT)
-  const [account] = seller.adyenAccountHolder?.accounts || []
+  const [account] = adyenAccountHolder?.accounts || []
   const state = useSelectState({
     items: SCHEDULE_OPTIONS,
     itemToString: (item: any) => item.label,
@@ -86,7 +88,7 @@ const SellerPayouts: FC<any> = ({ seller }) => {
         </Box>
         <Button
           loading={isLoading}
-          disabled={!seller.adyenAccountHolder}
+          disabled={!adyenAccountHolder}
           variant="primary"
           csx={{ marginTop: '20px' }}
           onClick={async (_e: any) => {

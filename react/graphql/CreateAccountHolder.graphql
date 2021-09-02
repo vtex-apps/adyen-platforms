@@ -14,7 +14,32 @@ mutation createAccountHolder(
     email: $email
     legalEntity: $legalEntity
   ) @context(provider: "vtex.adyen-platforms") {
-    urlToken
+    adyenAccountHolder {
+      accountHolderCode
+      accountHolderStatus {
+        status
+        processingState {
+          disabled
+        }
+        payoutState {
+          disabled
+        }
+      }
+      accountHolderDetails {
+        email
+      }
+      accounts {
+        accountCode
+        payoutSchedule {
+          schedule
+        }
+        status
+      }
+    }
+    onboarding {
+      accountHolderCode
+      urlToken
+    }
     invalidFields {
       errorDescription
     }

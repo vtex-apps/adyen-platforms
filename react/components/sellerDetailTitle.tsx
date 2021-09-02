@@ -1,10 +1,13 @@
 import type { FC } from 'react'
-import React from 'react'
+import React, { useContext } from 'react'
 import { PageHeader } from '@vtex/admin-ui'
 import { useRuntime } from 'vtex.render-runtime'
 
-const SellerDetailTitle: FC<any> = ({ seller }: any) => {
+import { StateContext } from '../context/StateContext'
+
+const SellerDetailTitle: FC<any> = () => {
   const { navigate } = useRuntime()
+  const { seller } = useContext(StateContext)
 
   if (!seller) return null
 

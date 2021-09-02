@@ -20,8 +20,6 @@ export default {
       return prev
     }, [] as any)
 
-    console.log(response)
-
     return response
   },
   findOne: async (sellerId: string, ctx: Context) => {
@@ -36,12 +34,6 @@ export default {
 
     const adyenOnboarding = await ctx.clients.onboarding.find({
       accountHolderCode: account.accountHolderCode,
-    })
-
-    console.log({
-      ...seller,
-      adyenOnboarding,
-      adyenAccountHolder,
     })
 
     return {

@@ -1,11 +1,14 @@
 import type { FC } from 'react'
-import React from 'react'
+import React, { useContext } from 'react'
 import { Set, Columns, Heading, Text, Box } from '@vtex/admin-ui'
 
 import SellerCloseAccountModal from './sellerCloseAccountModal'
+import { StateContext } from '../context/StateContext'
 
-const SellerAccountDetails: FC<any> = ({ seller }: any) => {
-  if (!seller?.adyenAccountHolder?.accountHolderCode) return null
+const SellerAccountDetails: FC<any> = () => {
+  const { adyenAccountHolder } = useContext(StateContext)
+
+  if (!adyenAccountHolder?.accountHolderCode) return null
 
   return (
     <Columns spacing={1}>
@@ -17,16 +20,14 @@ const SellerAccountDetails: FC<any> = ({ seller }: any) => {
               <Box>
                 <Set orientation="vertical">
                   <Text variant="subtitle">Account Holder Code</Text>
-                  <Text>
-                    {`${seller.adyenAccountHolder.accountHolderCode}`}
-                  </Text>
+                  <Text>{`${adyenAccountHolder.accountHolderCode}`}</Text>
                 </Set>
               </Box>
               <Box>
                 <Set orientation="vertical">
                   <Text variant="subtitle">Account Status</Text>
                   <Text>
-                    {`${seller.adyenAccountHolder.accountHolderStatus.status}`}
+                    {`${adyenAccountHolder.accountHolderStatus?.status || '-'}`}
                   </Text>
                 </Set>
               </Box>
@@ -34,14 +35,14 @@ const SellerAccountDetails: FC<any> = ({ seller }: any) => {
                 <Set orientation="vertical">
                   <Text variant="subtitle">Account Email</Text>
                   <Text>
-                    {`${seller.adyenAccountHolder.accountHolderDetails?.email}`}
+                    {`${adyenAccountHolder.accountHolderDetails?.email}`}
                   </Text>
                 </Set>
               </Box>
             </Set>
           </Set>
           <Box csx={{ marginTop: 6 }}>
-            <SellerCloseAccountModal seller={seller} />
+            <SellerCloseAccountModal adyenAccountHolder={adyenAccountHolder} />
           </Box>
         </Box>
       </Columns.Item>

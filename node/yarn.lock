@@ -167,10 +167,10 @@
   resolved "https://registry.yarnpkg.com/@types/uuid/-/uuid-8.3.1.tgz#1a32969cf8f0364b3d8c8af9cc3555b7805df14f"
   integrity sha512-Y2mHTRAbqfFkpjldbkHGY8JIzRN6XqYRliG8/24FcHm2D2PwW24fl5xMRTVGdrb7iMrwCaIEbLWerGIkXuFWVg==
 
-"@vtex/api@6.44.0":
-  version "6.44.0"
-  resolved "https://registry.yarnpkg.com/@vtex/api/-/api-6.44.0.tgz#8dc2a27c37635278117310bcc5cd16203c0a5849"
-  integrity sha512-7nPIwzQz55Mu0E1BOoW1noObZet9J34iKmeAJU3TRL7iiGmPZB0McSjC6KgDHkfqYgim2JGrnCsa1978ffbwKQ==
+"@vtex/api@6.45.3":
+  version "6.45.3"
+  resolved "https://registry.yarnpkg.com/@vtex/api/-/api-6.45.3.tgz#fe7d08adb4eab1fda5e34143cc6302a4c5aa5f52"
+  integrity sha512-kiD7We1TCKDyBdpYoh2Se3An+jTJRUzXGNpKifoDZylWQ1PyIx+3oL5ZAif9InlY3uJkfEisSAI6nxoKTgvPfw==
   dependencies:
     "@types/koa" "^2.11.0"
     "@types/koa-compose" "^3.2.3"

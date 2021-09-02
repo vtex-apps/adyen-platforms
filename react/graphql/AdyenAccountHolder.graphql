@@ -1,0 +1,24 @@
+query AdyenAccountHolder($sellerId: String) {
+  adyenAccountHolder(sellerId: $sellerId) {
+    accountHolderCode
+    accountHolderStatus {
+      status
+      processingState {
+        disabled
+      }
+      payoutState {
+        disabled
+      }
+    }
+    accountHolderDetails {
+      email
+    }
+    accounts {
+      accountCode
+      payoutSchedule {
+        schedule
+      }
+      status
+    }
+  }
+}
