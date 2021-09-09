@@ -1,7 +1,7 @@
 {
   "name": "adyen-platforms",
   "vendor": "vtex",
-  "version": "0.0.1-beta.6",
+  "version": "0.1.0",
   "title": "Adyen-platforms",
   "description": "Integration with Adyen for Platforms",
   "mustUpdateAt": "2022-01-04",

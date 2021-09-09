@@ -1,108 +1,62 @@
-# GraphQL Example
+📢 Use this project, [contribute](https://github.com/vtex-apps/connector-adyen) to it or open issues to help evolve it using [Store Discussion](https://github.com/vtex-apps/store-discussion).
 
-A reference app implementing a VTEX IO service with GraphQL resolvers.
+# Adyen Platforms
 
-![GraphQL Server Architecture](https://user-images.githubusercontent.com/18706156/77382285-bf2d6c80-6d5e-11ea-9f39-2c30b3ec3672.jpg)
+<!-- DOCS-IGNORE:start -->
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 
-We use [**Apollo Server**](https://www.apollographql.com/docs/apollo-server/) as the underlying framework along with some tweaks for our platform.
+[![All Contributors](https://img.shields.io/badge/all_contributors-0-orange.svg?style=flat-square)](#contributors-)
 
-For communicating with external services or other VTEX IO apps, we use the [**node-vtex-api**](https://github.com/vtex/node-vtex-api), a VTEX set of utilities for Node services. You can import this package using NPM from `@vtex/api` (already imported on this project)
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
+<!-- DOCS-IGNORE:end -->
 
-**Start from `graphq/schema.graphql` and `node/index.ts` and follow the comments and imports!**
+This app integrates the [Adyen for Platforms](https://docs.adyen.com/platforms) service with your VTEX marketplace.
 
-When _linking_ a GraphQL app, our CLI will automatically provide you a **[GraphiQL](https://github.com/graphql/graphiql) endpoint**, for you to test the functionalities. You can also access a specific app's GraphiQL through the **GraphQL IDE** section on the admin site (as long as the [admin-graphql-ide](https://github.com/vtex-apps/admin-graphql-ide) app is installed on that account).
+## Configuration
 
-Queries, mutations and types defined on the `schema.graphql` will have theirs implementation on the `Service` object exported on `node/index.ts`.
+### Adyen Payment Setup
 
-> For more information about our GraphQL services, check [**graphql-server**](https://github.com/vtex/graphql-server) and its _Wiki_ (VTEX internal only).
+⚠️ Before you can use the Adyen Platforms app, the [Adyen Payment connector](https://github.com/vtex-apps/connector-adyen) must be installed and configured in you VTEX account.
 
-## About GraphQL
+### Installing the App
 
-It's important to  understand what GraphQL is and how it compares with other popular API standards, such as REST.
+1. Install this app in the desired account using the CLI command `vtex install vtex.adyen-platforms`.
+2. In your admin sidebar, select `Adyen for Platforms` under the **Marketplace** section.
+3. Select the `Settings` tab:
+   - Enter your Platform API credentials. These API credentials are found in your Adyen admin panel, under the **Developers** menu. You will need the credentials for your Marketplace account: ws\_[123456]@MarketPlace.[AccountName])
+   - Enter your production Adyen for Platforms API endpoint. For testing, you can enter the test endpoint: `https://cal-test.adyen.com/cal/services`. This is also found under the **Developers** menu in your Adyen account.
+   - Enter the URL sub-merchants will be directed to when they complete their onboarding. This is optional, see the Onboarding section for details on this process.
 
-There are many resources out there that can help understand the basics, so let's list a few of them here:
+### Managing Seller Accounts
 
--   [GraphQL website](http://graphql.org/learn/)
--   [How to GraphQL](https://www.howtographql.com/basics/1-graphql-is-the-better-rest/)
+The Sellers tab in the Adyen for Platforms menu in your VTEX admin will display all Seller accounts in your VTEX marketplace. Selecting a seller will bring you to that seller's detail screen.
 
-## Recipes
+#### Onboarding New Sellers
 
-### Configuring cache for specific queries
-Caching is one of the most important strategies for making applications **fast and responsive**. This is achieved by setting **cache control hints** in the GraphQL schema. Our GraphQL Server computes a cache expiration date by combining `@cacheControl` declarations from the fields returned by a specific request, whereas the props `maxAge` and `scope` can be defined. It errs on the safe side for requests with multiple `@cacheControl` declarations, so shorter `maxAge` results override longer, and `PRIVATE` scope overrides `PUBLIC`.
+If a seller has not yet been onboarded, you will have the option to create an Adyen account for the selected seller. This option creates a unique URL for that seller. The URL needs to be provided to the seller, which will direct them to the Adyen [hosted onboarding page](https://docs.adyen.com/platforms/hosted-onboarding-page).
 
-- There are currently tree possible `maxAge`s _(LONG, MEDIUM and SHORT)_ and two possible `scope`s _(PRIVATE and PUBLIC)_.
+You will be able to accept payment on behalf of a seller immediately after created a Adyen account for them, but payouts of collected payments will be disabled until the seller completes the Adyen onboarding process.
 
-Suppose that we want to create a simple catalog app that has two types, `type Product` and `type Order`. Since products don't change quickly throughout the day and anyone can see them, they can be cached with a maxAge `LONG` in a `PUBLIC` scope. Order, on the other hand, is a per user entity and should have a PRIVATE scope. To achieve this behavior, the following annotations must be included to the schema
+ℹ️ After completing the Adyen hosted onboarding, users will be redirecting to the URL you entered in the app settings. If no URL was entered, they are redirected back to a default onboarding success page that is provided when you install the app, `https://[Store]/marketplace/onboard-complete/`
 
-```graphql
-type Product @cacheControl(maxAge: LONG, scope: PUBLIC) {
-  id: ID!
-  name: String
-  description: String
-}
+#### Payout Schedule
 
-type Order @cacheControl(scope: PRIVATE) {
-  id: ID!
-  statusDescription: String
-  description: String
-}
+The Adyen default payout schedule for a seller is `daily`. You can change the payout schedule timing for each seller in the seller detail screen.
 
-type Query {
-  listOrders: [Order]
-  listProducts: [Product]
-}
-```
+<!-- DOCS-IGNORE:start -->
 
-> **Note** to know more on how these cache hints work, take a look at the [Apollo Server docs for caching](https://www.apollographql.com/docs/apollo-server/performance/caching/) 
+## Contributors ✨
 
-Since our GraphQL implementation uses a CDN (Cloud-Front) to cache query responses, `PRIVATE` queries should land in a different endpoint from `PUBLIC` ones. Each endpoint have some configurations tweaks in the CDN and may lead to different behaviors. For example, to receive cookies in the backend, you need to be in a private route.
+Thanks goes to these wonderful people:
 
-### Caching requests when using public endpoint
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<!-- markdownlint-enable -->
+<!-- prettier-ignore-end -->
 
-Requests to `graphql-server` using public endpoints are not cacheable, so they are given `cache-control` with `no-cache`. The way to override this behavior is to send the header `'x-vtex-cacheable': 'true'` on request.
+<!-- ALL-CONTRIBUTORS-LIST:END -->
 
-### Resolving conflicts (`@context` directive)
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind are welcome!
 
-Let's say that another app called `rewards-graphql` also defines a field named `products` inside the `Query` type. If both apps live on the same workspace/account it will cause some requests to fail, since our GraphQL server won't be able to automatically figure out which app should resolve that query.
-
-For this use case we support a special directive called `@context`, which GraphQL clients can use to provide additional information to resolve these kind of conflicts.
-
-#### Specifying provider
-
-If the client knows about a conflict (or in any case, for precaution), it can specify which app defined the field it's requesting. In the example we've mentioned above, with that new `rewards-graphql` app, the client could send the query like this:
-
-```graphql
-query getProducts {
-  products @context(provider: "vtex.products-graphql") {
-    name
-  }
-}
-```
-
-This declares that we want to use the definition of `products` from `products-graphql`, not from `rewards-graphql`, so that it can properly rename and execute it.
-
-#### Specifying sender
-
-In some cases it might be hard for a client to know that a conflict can happen, since an app doesn't know about all other apps that may be running on a workspace, it only knows about its own direct dependencies. At the same time, we'd like to restrict apps so that they can only access types/fields defined by apps they directly depend on.
-
-Both these problems can be solved by using the `@context` directive again, but this time using the `sender` argument. Basically, apps sending requests to `graphql-server` should include this directive announcing their names, so that it can restrict which parts of the schema can be accessed. Note that restricting the access also makes it easier for apps to know exactly when they'd need to specify a `provider`, since conflicts with apps they don't know about will never happen.
-
-So, let's say that an app called `client-app`, that depends only on `products-graphql` is sending a GraphQL request. Even if `rewards-graphql` is running in the current workspace it won't need to specify the provider anymore, just set the `sender`. 
-
-```graphql
-{
-  products @context(sender: "vtex.client-app@1.2.3") {
-    name
-  }
-}
-```
-
-**Note:** If you are requesting GraphQL data from React apps that uses the `react` builder the `sender` argument **is already baked** into every request it makes.
-
-## Splunk Dashboard
-
-We have an (for now, VTEX-only, internal) Splunk dashboard to show all metrics related to your app. You can find it at:
-
-https://splunk72.vtex.com/en-US/app/vtex_io_apps/node_app_metrics
-
-After linking this app and making some requests, you can select `vtex.graphql-example` and see the metrics for your app. **Don't forget to check the box Development, as you are linking your app in a development workspace**.
+<!-- DOCS-IGNORE:end -->
