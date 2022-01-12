@@ -1,7 +1,14 @@
 name: "[QE] Lint"
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - master
+      - main
+      - release/*
+      - feature/*
+      - fix/*
+      - chore/*
   pull_request:
     branches:
       - master
