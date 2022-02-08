@@ -23,13 +23,24 @@ This app integrates the [Adyen for Platforms](https://docs.adyen.com/platforms) 
 1. Install this app in the desired account using the CLI command `vtex install vtex.adyen-platforms`.
 2. In your admin sidebar, select `Adyen for Platforms` under the **Marketplace** section.
 3. Select the `Settings` tab:
-   - Enter your Platform API credentials. These API credentials are found in your Adyen admin panel, under the **Developers** menu. You will need the credentials for your Marketplace account: ws\_[123456]@MarketPlace.[AccountName])
+   - Enter your Platform API credentials.
+      - Switch from `Company` account to `Merchant` account
+      - Under the **Developers** menu, select `API credentials`
+      - Select the username that follows this format `ws\_[123456]@MarketPlace.[YourPlatformAccount]`, if there is no username in that format, see **Creating New Web Service User**
+      - Use `Generate New API Key` to create a new key for Adyen and store it somewhere safe. This can be regenerated if lost
    - Enter your production Adyen for Platforms API endpoint. For testing, you can enter the test endpoint: `https://cal-test.adyen.com/cal/services`. This is also found under the **Developers** menu in your Adyen account.
    - Enter the URL sub-merchants will be directed to when they complete their onboarding. This is optional, see the Onboarding section for details on this process.
 
 ### Managing Seller Accounts
 
-The Sellers tab in the Adyen for Platforms menu in your VTEX admin will display all Seller accounts in your VTEX marketplace. Selecting a seller will bring you to that seller's detail screen.
+The Sellers tab in the Adyen for Platforms menu in your VTEX admin will display all Seller accounts in your VTEX marketplace.
+- Users can `Create Adyen Account` for specific sellers
+  1. Enter the Adyen Account Holder Code
+    - Ensure you're on Adyen's `Merchant` account in Adyen's website
+    - Under the `Platform` tab, select `Sub-merchants`. Select the desired `Adyen Account Holder Code`
+  2. Enter the Country, Entity Type, Business Name, and Business Email
+  3. Set the desired payout schedule. See section `Payout Schedule` for more information
+- Users can create a new `Onboarding Link`
 
 #### Onboarding New Sellers
 
@@ -41,7 +52,7 @@ You will be able to accept payment on behalf of a seller immediately after creat
 
 #### Payout Schedule
 
-The Adyen default payout schedule for a seller is `daily`. You can change the payout schedule timing for each seller in the seller detail screen.
+The Adyen default payout schedule for a seller is `daily`. You can change this setting to the desired interval
 
 <!-- DOCS-IGNORE:start -->
 
