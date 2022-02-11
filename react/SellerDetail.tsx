@@ -1,5 +1,5 @@
-import { FC, useState } from 'react'
-import React from 'react'
+import type { FC } from 'react'
+import React, { useState } from 'react'
 import { ThemeProvider, Card, Divider } from '@vtex/admin-ui'
 import { useQuery } from 'react-apollo'
 import { useRuntime } from 'vtex.render-runtime'
@@ -29,21 +29,21 @@ const SellerDetail: FC = () => {
   const { loading: loadingS, data: sellerData } = useQuery(Seller, {
     variables: { sellerId: params.seller_id },
     onCompleted: () => {
-      setState((state: any) => ({
-        ...state,
-        seller: sellerData.seller
+      setState((prevState: any) => ({
+        ...prevState,
+        seller: sellerData.seller,
       }))
-    }
+    },
   })
 
   const { loading: loadingA, data: adyenData } = useQuery(AdyenAccountHolder, {
     variables: { sellerId: params.seller_id },
     onCompleted: () => {
-      setState((state: any) => ({
-        ...state,
-        adyenAccountHolder: adyenData.adyenAccountHolder
+      setState((prevState: any) => ({
+        ...prevState,
+        adyenAccountHolder: adyenData.adyenAccountHolder,
       }))
-    }
+    },
   })
 
   const { accountHolderCode } = adyenData?.adyenAccountHolder || {}
@@ -53,18 +53,16 @@ const SellerDetail: FC = () => {
     },
     skip: !accountHolderCode,
     onCompleted: () => {
-      setState((state: any) => ({
-        ...state,
-        onboarding: onboardingData.onboarding
+      setState((prevState: any) => ({
+        ...prevState,
+        onboarding: onboardingData.onboarding,
       }))
-    }
+    },
   })
 
   const isLoading = loadingS && loadingO && loadingA
 
   if (isLoading || !sellerData) return null
-
-  console.log('state ==>', state)
 
   return (
     <ThemeProvider>

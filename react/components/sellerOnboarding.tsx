@@ -62,6 +62,7 @@ const SellerOnboarding: FC<any> = () => {
         onboarding: response.data.refreshOnboarding,
       })
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.log(error)
       setIsLoading(false)
 

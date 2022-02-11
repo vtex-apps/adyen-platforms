@@ -97,6 +97,7 @@ export class Onboarding extends MasterData {
 
       return response[0] || null
     } catch (err) {
+      // eslint-disable-next-line no-console
       console.log(err)
 
       return null
