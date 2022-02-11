@@ -32,8 +32,7 @@ const SellerCloseAccountModal: FC<any> = ({ adyenAccountHolder }) => {
         },
       })
     } catch (error) {
-      // eslint-disable-next-line no-console
-      console.log(error)
+      console.error(error)
     }
 
     setIsLoading(false)

@@ -58,8 +58,7 @@ export default class Adyen extends ExternalClient {
         }
       )
     } catch (error) {
-      // eslint-disable-next-line no-console
-      console.log(error)
+      console.error(error)
 
       return null
     }

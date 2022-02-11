@@ -63,8 +63,7 @@ const SellerOnboardingModal: FC<any> = ({ seller, dispatch, disabled }) => {
         },
       })
     } catch (error) {
-      // eslint-disable-next-line no-console
-      console.log(error)
+      console.error(error)
     }
 
     setIsLoading(false)
