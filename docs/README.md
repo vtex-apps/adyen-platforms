@@ -40,7 +40,8 @@ The Sellers tab in the Adyen for Platforms menu in your VTEX admin will display 
     - Under the `Platform` tab, select `Sub-merchants`. Select the desired `Adyen Account Holder Code`
   2. Enter the Country, Entity Type, Business Name, and Business Email
   3. Set the desired payout schedule. See section `Payout Schedule` for more information
-- Users can create a new `Onboarding Link`
+- Users can create a new `Onboarding Link` and use that link to onboard users.
+  - Note: After onboarding, it may take awhile before the user is activated for use.
 
 #### Onboarding New Sellers
 
