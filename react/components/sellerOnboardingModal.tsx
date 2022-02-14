@@ -63,7 +63,7 @@ const SellerOnboardingModal: FC<any> = ({ seller, dispatch, disabled }) => {
         },
       })
     } catch (error) {
-      console.log(error)
+      console.error(error)
     }
 
     setIsLoading(false)

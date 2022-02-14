@@ -58,7 +58,7 @@ export default class Adyen extends ExternalClient {
         }
       )
     } catch (error) {
-      console.log(error)
+      console.error(error)
 
       return null
     }

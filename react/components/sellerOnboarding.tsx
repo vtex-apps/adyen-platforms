@@ -62,7 +62,7 @@ const SellerOnboarding: FC<any> = () => {
         onboarding: response.data.refreshOnboarding,
       })
     } catch (error) {
-      console.log(error)
+      console.error(error)
       setIsLoading(false)
 
       return
