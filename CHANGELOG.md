@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.1.1] - 2022-02-14
+
 ### Fixed
 
 - Fixed a bug where the seller page would be stuck in an infinite loop
