@@ -75,7 +75,14 @@ export default {
 
     if (!accounts) return null
 
-    const [{ accountHolderCode }] = accounts
+    let [{ accountHolderCode }] = accounts
+
+    for (const account of accounts) {
+      if (account.status !== 'Closed') {
+        accountHolderCode = account.accountHolderCode
+        break
+      }
+    }
 
     return ctx.clients.adyenClient.getAccountHolder(
       accountHolderCode,

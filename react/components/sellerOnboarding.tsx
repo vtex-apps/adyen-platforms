@@ -22,8 +22,7 @@ import REFRESH_ONBOARDING from '../graphql/RefreshOnboarding.graphql'
 import { StateContext } from '../context/StateContext'
 
 const SellerOnboarding: FC<any> = () => {
-  const { seller, adyenAccountHolder, onboarding, dispatch } =
-    useContext(StateContext)
+  const { seller, adyenAccountHolder, onboarding } = useContext(StateContext)
 
   const [onboardUrl, setOnboardUrl] = useState('')
   const [isLoading, setIsLoading] = useState(false)
@@ -47,7 +46,7 @@ const SellerOnboarding: FC<any> = () => {
     workspace,
   ])
 
-  const handleRefresh = async () => {
+  const handleRefresh = async (setContextState: any) => {
     setIsLoading(true)
 
     try {
@@ -57,10 +56,7 @@ const SellerOnboarding: FC<any> = () => {
         },
       })
 
-      dispatch({
-        type: 'SET_ONBOARDING',
-        onboarding: response.data.refreshOnboarding,
-      })
+      setContextState({ onboarding: response.data.refreshOnboarding })
     } catch (error) {
       console.error(error)
       setIsLoading(false)
@@ -100,22 +96,23 @@ const SellerOnboarding: FC<any> = () => {
               holder.
             </Paragraph>
             <Set>
-              <SellerOnboardingModal
-                seller={seller}
-                dispatch={dispatch}
-                disabled={isActive}
-              />
+              <SellerOnboardingModal seller={seller} disabled={isActive} />
               {isActive && (
-                <Button
-                  variant="primary"
-                  loading={isLoading}
-                  disabled={
-                    adyenAccountHolder.accountHolderStatus?.status !== 'Active'
-                  }
-                  onClick={() => handleRefresh()}
-                >
-                  Create New Link
-                </Button>
+                <StateContext.Consumer>
+                  {({ setContextState }) => (
+                    <Button
+                      variant="primary"
+                      loading={isLoading}
+                      disabled={
+                        adyenAccountHolder.accountHolderStatus?.status !==
+                        'Active'
+                      }
+                      onClick={() => handleRefresh(setContextState)}
+                    >
+                      Create New Link
+                    </Button>
+                  )}
+                </StateContext.Consumer>
               )}
             </Set>
             {onboardUrl && (

@@ -17,13 +17,14 @@ import {
 import { useMutation } from 'react-apollo'
 
 import CLOSE_ACCOUNT_HOLDER from '../graphql/CloseAccountHolder.graphql'
+import { StateContext } from '../context/StateContext'
 
 const SellerCloseAccountModal: FC<any> = ({ adyenAccountHolder }) => {
   const [isLoading, setIsLoading] = useState(false)
   const [deleteAccountHolder] = useMutation(CLOSE_ACCOUNT_HOLDER)
   const publishModal = useModalState()
 
-  const handleClose = async () => {
+  const handleClose = async (setContextState: any) => {
     setIsLoading(true)
     try {
       await deleteAccountHolder({
@@ -42,53 +43,62 @@ const SellerCloseAccountModal: FC<any> = ({ adyenAccountHolder }) => {
       message: 'Adyen account deleted',
     })
 
+    adyenAccountHolder.accountHolderStatus.status = 'Closed'
+    setContextState({ adyenAccountHolder })
+
     publishModal.hide()
   }
 
   return (
-    <Set spacing={3}>
-      <ModalDisclosure state={publishModal}>
-        <Button
-          disabled={adyenAccountHolder.accountHolderStatus?.status === 'Closed'}
-          variant="danger"
-        >
-          Close Account
-        </Button>
-      </ModalDisclosure>
-      <StatelessModal
-        aria-label="Close Adyen account modal"
-        state={publishModal}
-        size="regular"
-        hideOnClickOutside={false}
-      >
-        <StatelessModal.Header title="Close Adyen Account" />
-        <StatelessModal.Content>
-          <Text>Close the Adyen account associated with this seller.</Text>
-          <Alert
-            csx={{ marginTop: 6 }}
-            type="warning"
-            icon={<IconWarningColorful />}
-            visible
+    <StateContext.Consumer>
+      {({ setContextState }) => (
+        <Set spacing={3}>
+          <ModalDisclosure state={publishModal}>
+            <Button
+              disabled={
+                adyenAccountHolder.accountHolderStatus?.status === 'Closed'
+              }
+              variant="danger"
+            >
+              Close Account
+            </Button>
+          </ModalDisclosure>
+          <StatelessModal
+            aria-label="Close Adyen account modal"
+            state={publishModal}
+            size="regular"
+            hideOnClickOutside={false}
           >
-            This action cannot be undone. This account will no longer be able to
-            process payments or receive payouts.
-          </Alert>
-        </StatelessModal.Content>
-        <StatelessModal.Footer>
-          <ModalButton closeModalOnClick variant="secondary">
-            Cancel
-          </ModalButton>
-          <ModalButton
-            loading={isLoading}
-            disabled={isLoading}
-            variant="danger"
-            onClick={async () => handleClose()}
-          >
-            Close
-          </ModalButton>
-        </StatelessModal.Footer>
-      </StatelessModal>
-    </Set>
+            <StatelessModal.Header title="Close Adyen Account" />
+            <StatelessModal.Content>
+              <Text>Close the Adyen account associated with this seller.</Text>
+              <Alert
+                csx={{ marginTop: 6 }}
+                type="warning"
+                icon={<IconWarningColorful />}
+                visible
+              >
+                This action cannot be undone. This account will no longer be
+                able to process payments or receive payouts.
+              </Alert>
+            </StatelessModal.Content>
+            <StatelessModal.Footer>
+              <ModalButton closeModalOnClick variant="secondary">
+                Cancel
+              </ModalButton>
+              <ModalButton
+                loading={isLoading}
+                disabled={isLoading}
+                variant="danger"
+                onClick={async () => handleClose(setContextState)}
+              >
+                Close
+              </ModalButton>
+            </StatelessModal.Footer>
+          </StatelessModal>
+        </Set>
+      )}
+    </StateContext.Consumer>
   )
 }
 

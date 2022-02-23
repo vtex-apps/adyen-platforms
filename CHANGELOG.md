@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+
+- Added the ability to show the latest Active account if the user has Closed accounts
+
+### Fixed
+
+- Fixed various inconsistencies due to removal of dispatch
+- Fixed a bug where the account status would not update after an account is closed
+
 ## [0.1.2] - 2022-03-01
 
 ### Fixed
