@@ -1369,7 +1369,7 @@ sprintf-js@~1.0.2:
   resolved "https://registry.yarnpkg.com/sprintf-js/-/sprintf-js-1.0.3.tgz#04e6926f662895354f3dd015203633b857297e2c"
   integrity sha1-BOaSb2YolTVPPdAVIDYzuFcpfiw=
 
-"stats-lite@github:vtex/node-stats-lite#dist":
+stats-lite@vtex/node-stats-lite#dist:
   version "2.2.0"
   resolved "https://codeload.github.com/vtex/node-stats-lite/tar.gz/1b0d39cc41ef7aaecfd541191f877887a2044797"
   dependencies:
@@ -1579,9 +1579,9 @@ vary@^1.1.2:
   resolved "https://registry.yarnpkg.com/vary/-/vary-1.1.2.tgz#2299f02c6ded30d4a5961b0b9f74524a18f634fc"
   integrity sha1-IpnwLG3tMNSllhsLn3RSShj2NPw=
 
-"vtex.adyen-platforms@https://sandboxusdev.myvtex.com/_v/private/typings/linked/v1/vtex.adyen-platforms@0.1.0/public/@types/vtex.adyen-platforms":
-  version "0.1.0"
-  resolved "https://sandboxusdev.myvtex.com/_v/private/typings/linked/v1/vtex.adyen-platforms@0.1.0/public/@types/vtex.adyen-platforms#ceae2516325bfb304c8d8378cef437dcc4783e5c"
+"vtex.adyen-platforms@https://sandboxusdev.myvtex.com/_v/private/typings/linked/v1/vtex.adyen-platforms@0.1.1/public/@types/vtex.adyen-platforms":
+  version "0.1.1"
+  resolved "https://sandboxusdev.myvtex.com/_v/private/typings/linked/v1/vtex.adyen-platforms@0.1.1/public/@types/vtex.adyen-platforms#aa3a1acccea8982acc032e24f8c3afd1dc24fa30"
 
 wrappy@1:
   version "1.0.2"

@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Fixed
+
+- Prevents Create New Link from being clicked when account is suspended
+
 ## [0.1.1] - 2022-02-14
 
 ### Fixed

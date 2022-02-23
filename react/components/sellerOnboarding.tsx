@@ -109,6 +109,9 @@ const SellerOnboarding: FC<any> = () => {
                 <Button
                   variant="primary"
                   loading={isLoading}
+                  disabled={
+                    adyenAccountHolder.accountHolderStatus?.status !== 'Active'
+                  }
                   onClick={() => handleRefresh()}
                 >
                   Create New Link
