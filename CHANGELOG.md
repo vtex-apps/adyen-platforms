@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.2.0] - 2022-03-01
+
 ### Added
 
 - Added the ability to show the latest Active account if the user has Closed accounts
