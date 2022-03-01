@@ -24,6 +24,12 @@ const SellerDetail: FC = () => {
     onboarding: null,
     seller: null,
     adyenAccountHolder: null,
+    setContextState: (inputState: any) => {
+      setState((prevState: any) => ({
+        ...prevState,
+        ...inputState,
+      }))
+    },
   })
 
   const { loading: loadingS, data: sellerData } = useQuery(Seller, {
