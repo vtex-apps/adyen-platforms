@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+
+- Updated readme to include details about contacting Adyen and how to use Adyen for Platforms Page
+
 ## [0.2.0] - 2022-03-01
 
 ### Added
