@@ -18,6 +18,10 @@ This app integrates the [Adyen for Platforms](https://docs.adyen.com/platforms) 
 
 ⚠️ Before you can use the Adyen Platforms app, the [Adyen Payment connector](https://github.com/vtex-apps/connector-adyen) must be installed and configured in you VTEX account.
 
+### Contacting Adyen
+
+Users must first contact Adyen to get their Adyen for Platforms set up. You will know when Adyen for Platforms is setup when a merchant account has the Platform tab on the sidebar. [Adyen for Platforms Quick Start Guide](https://docs.adyen.com/platforms/quick-start)
+
 ### Installing the App
 
 1. Install this app in the desired account using the CLI command `vtex install vtex.adyen-platforms`.
@@ -36,8 +40,8 @@ This app integrates the [Adyen for Platforms](https://docs.adyen.com/platforms) 
 The Sellers tab in the Adyen for Platforms menu in your VTEX admin will display all Seller accounts in your VTEX marketplace.
 - Users can `Create Adyen Account` for specific sellers
   1. Enter the Adyen Account Holder Code
-    - Ensure you're on Adyen's `Merchant` account in Adyen's website
-    - Under the `Platform` tab, select `Sub-merchants`. Select the desired `Adyen Account Holder Code`
+      - Ensure you're on Adyen's `Merchant` account in Adyen's website
+      - Under the `Platform` tab, select `Sub-merchants`. Select the desired `Adyen Account Holder Code`
   2. Enter the Country, Entity Type, Business Name, and Business Email
   3. Set the desired payout schedule. See section `Payout Schedule` for more information
 - Users can create a new `Onboarding Link` and use that link to onboard users.
