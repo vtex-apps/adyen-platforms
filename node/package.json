@@ -11,8 +11,7 @@
     "@types/uuid": "^8.3.0",
     "tslint": "^5.12.0",
     "tslint-config-vtex": "^2.1.0",
-    "typescript": "3.9.7",
-    "vtex.adyen-platforms": "https://sandboxusdev.myvtex.com/_v/private/typings/linked/v1/vtex.adyen-platforms@0.2.0/public/@types/vtex.adyen-platforms"
+    "typescript": "3.9.7"
   },
   "scripts": {
     "lint": "tsc --noEmit && tslint -c tslint.json './**/*.ts'"
