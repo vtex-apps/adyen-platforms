@@ -25,9 +25,9 @@ Users must first contact Adyen to get their account enabled to use Adyen for Pla
 ### Installing the App
 
 1. Install this app in the desired account using the CLI command `vtex install vtex.adyen-platforms`.
-2. In your admin sidebar, select `Adyen for Platforms` under the **Marketplace** section.
+2. In your admin sidebar, search for `Adyen for Platforms`. This will bring you to the Adyen for Platforms settings page.
 3. Select the `Settings` tab:
-   - Enter your Platform API credentials. To find them:
+   - Enter your Platform API credentials. To find them, log in to Adyen's admin interface and do the following:
       - Switch from `Company` account to `Merchant` account
       - Under the **Developers** menu, select `API credentials`
       - Select the username that follows this format `ws\_[123456]@MarketPlace.[YourPlatformAccount]`, if there is no username in that format, see **Creating New Web Service User**
@@ -39,8 +39,8 @@ Users must first contact Adyen to get their account enabled to use Adyen for Pla
 
 The Sellers tab in the Adyen for Platforms menu in your VTEX admin will display all Seller accounts in your VTEX marketplace.
 - Users can `Create Adyen Account` for specific sellers
-  1. Enter an unused Adyen Account Holder Code
-      - Note: To See Used Adyen Account Holder Code
+  1. Enter a unique Adyen Account Holder Code (this can be the seller account name within VTEX or another string of your choosing)
+      - Note: To view any Adyen Account Holder Codes that are already in use:
         - Ensure you're on Adyen's `Merchant` account in Adyen's website
         - Under the `Platform` tab, select `Sub-merchants`
   2. Enter the Country, Entity Type, Business Name, and Business Email
