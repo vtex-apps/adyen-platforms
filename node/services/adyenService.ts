@@ -13,12 +13,19 @@ export default {
     ctx: Context
     data: CreateAccountHolderDTO
   }) => {
-    const { country, legalBusinessName, legalEntity, email, sellerId } = data
+    const {
+      country,
+      legalBusinessName,
+      legalEntity,
+      email,
+      sellerId,
+      processingTier,
+    } = data
 
     const accountHolder = {
       accountHolderCode: data.accountHolderCode,
       legalEntity,
-      processingTier: 3,
+      processingTier,
       accountHolderDetails: {
         address: {
           country,
