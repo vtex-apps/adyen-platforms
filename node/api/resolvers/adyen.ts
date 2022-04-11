@@ -7,6 +7,7 @@ export interface CreateAccountHolderDTO {
   legalBusinessName: string
   email: string
   legalEntity: string
+  processingTier: number
 }
 
 export interface AccountUpdateDTO {

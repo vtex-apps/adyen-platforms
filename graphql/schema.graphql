@@ -133,6 +133,7 @@ type Mutation {
     legalBusinessName: String!
     email: String!
     legalEntity: String!
+    processingTier: Int!
   ): AdyenAccountStatus
   closeAccountHolder(accountHolderCode: String!): Onboarding
   onboardingComplete(accountHolderCode: String!): Onboarding

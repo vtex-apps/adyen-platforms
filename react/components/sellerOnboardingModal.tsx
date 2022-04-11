@@ -34,6 +34,12 @@ const SellerOnboardingModal: FC<any> = ({ seller, disabled }) => {
 
   const countries = [{ id: 'US', label: 'United States' }]
   const legalEntities = [{ id: 'Business', label: 'Business' }]
+  const processingTiers = [
+    { id: 0, label: 'Tier 0' },
+    { id: 1, label: 'Tier 1' },
+    { id: 2, label: 'Tier 2' },
+    { id: 3, label: 'Tier 3' },
+  ]
 
   const countryState = useSelectState({
     items: countries,
@@ -45,6 +51,12 @@ const SellerOnboardingModal: FC<any> = ({ seller, disabled }) => {
     items: legalEntities,
     itemToString: (item: any) => item.label,
     initialSelectedItem: legalEntities[0],
+  })
+
+  const processingTierState = useSelectState({
+    items: processingTiers,
+    itemToString: (item: any) => item.label,
+    initialSelectedItem: processingTiers[0],
   })
 
   const createAccount = async (setContextState: any) => {
@@ -61,6 +73,7 @@ const SellerOnboardingModal: FC<any> = ({ seller, disabled }) => {
           legalBusinessName,
           email,
           legalEntity: legalEntityState.selectedItem?.id,
+          processingTier: processingTierState.selectedItem?.id,
         },
       })
     } catch (error) {
@@ -133,6 +146,13 @@ const SellerOnboardingModal: FC<any> = ({ seller, disabled }) => {
                   items={legalEntities}
                   state={legalEntityState}
                   label="Legal Entity Type"
+                  renderItem={(item: any) => item.label}
+                />
+                <Select
+                  block
+                  items={processingTiers}
+                  state={processingTierState}
+                  label="Processing Tier"
                   renderItem={(item: any) => item.label}
                 />
               </Set>

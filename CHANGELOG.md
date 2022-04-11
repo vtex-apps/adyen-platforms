@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+
+- Added a processing tier selection on the account creation modal
+
 ## [0.2.1] - 2022-03-03
 
 ### Added
