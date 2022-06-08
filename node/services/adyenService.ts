@@ -91,10 +91,12 @@ export default {
       }
     }
 
-    return ctx.clients.adyenClient.getAccountHolder(
+    const accountHolderResult = await ctx.clients.adyenClient.getAccountHolder(
       accountHolderCode,
       await settings(ctx)
     )
+
+    return accountHolderResult
   },
   updateAccount: async ({
     ctx,
@@ -138,7 +140,7 @@ export default {
 
     const { id, ...update } = account
 
-    ctx.clients.account.update(id, { ...update, status: 'Closed' })
+    await ctx.clients.account.update(id, { ...update, status: 'Closed' })
 
     return response.accountHolderStatus
   },

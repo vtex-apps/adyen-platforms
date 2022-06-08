@@ -72,6 +72,13 @@
     {
       "name": "outbound-access",
       "attrs": {
+        "host": "cal-live.adyen.com",
+        "path": "/cal/services/*"
+      }
+    },
+    {
+      "name": "outbound-access",
+      "attrs": {
         "host": "api.vtex.com",
         "path": "/dataentities/*"
       }
