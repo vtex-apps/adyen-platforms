@@ -9,7 +9,7 @@ export default class Adyen extends ExternalClient {
   }
 
   private getEndpoint(settings: any) {
-    return this.context.production ? settings.productionAPI : TEST_URL
+    return settings.productionAPI ?? TEST_URL
   }
 
   public async createAccountHolder(
