@@ -102,7 +102,7 @@ export class Account extends MasterData {
       })
 
       // return first active account if available
-      for(const account of accounts){
+      for (const account of accounts) {
         if (account.status === 'Active') {
           return account
         }

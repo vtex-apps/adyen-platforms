@@ -64,10 +64,11 @@ const SellerPayouts: FC<any> = () => {
 
   useEffect(() => {
     if (account?.payoutSchedule.schedule) {
-      const selectedItem: any = SCHEDULE_OPTIONS.find(
-        i => i.value === account?.payoutSchedule.schedule
-      ) ?? SCHEDULE_OPTIONS[0]
-  
+      const selectedItem: any =
+        SCHEDULE_OPTIONS.find(
+          i => i.value === account?.payoutSchedule.schedule
+        ) ?? SCHEDULE_OPTIONS[0]
+
       state.selectItem(selectedItem)
     }
   }, [account?.payoutSchedule.schedule])
