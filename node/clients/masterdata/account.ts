@@ -101,6 +101,13 @@ export class Account extends MasterData {
         schema: ACCOUNT_SCHEMA_VERSION,
       })
 
+      // return first active account if available
+      for(const account of accounts){
+        if (account.status === 'Active') {
+          return account
+        }
+      }
+
       return accounts[0] || null
     } catch (error) {
       return null
@@ -132,6 +139,7 @@ export class Account extends MasterData {
           dataEntity: DATA_ENTITY,
           fields: ['sellerId', 'accountHolderCode', 'accountCode', 'status'],
           pagination: { page: 1, pageSize: 100 },
+          schema: ACCOUNT_SCHEMA_VERSION,
         })
 
       return accounts.data

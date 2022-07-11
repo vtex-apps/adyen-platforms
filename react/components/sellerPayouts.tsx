@@ -1,5 +1,5 @@
 import type { FC } from 'react'
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import { useMutation } from 'react-apollo'
 import {
   Box,
@@ -55,14 +55,22 @@ const SellerPayouts: FC<any> = () => {
 
   const [updateAccount] = useMutation(UPDATE_ACCOUNT)
   const [account] = adyenAccountHolder?.accounts || []
+
   const state = useSelectState({
     items: SCHEDULE_OPTIONS,
     itemToString: (item: any) => item.label,
-    initialSelectedItem:
-      SCHEDULE_OPTIONS.find(
-        i => i.value === account?.payoutSchedule.schedule
-      ) ?? SCHEDULE_OPTIONS[0],
+    initialSelectedItem: SCHEDULE_OPTIONS[0],
   })
+
+  useEffect(() => {
+    if (account?.payoutSchedule.schedule) {
+      const selectedItem: any = SCHEDULE_OPTIONS.find(
+        i => i.value === account?.payoutSchedule.schedule
+      ) ?? SCHEDULE_OPTIONS[0]
+  
+      state.selectItem(selectedItem)
+    }
+  }, [account?.payoutSchedule.schedule])
 
   return (
     <Columns spacing={1}>
