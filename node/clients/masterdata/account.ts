@@ -101,14 +101,12 @@ export class Account extends MasterData {
         schema: ACCOUNT_SCHEMA_VERSION,
       })
 
-      // return first active account if available
-      for (const account of accounts) {
-        if (account.status === 'Active') {
-          return account
-        }
-      }
+      if (!accounts.length) return null
 
-      return accounts[0] || null
+      // return first active account if available
+      return (
+        accounts.find(account => account.status === 'Active') ?? accounts[0]
+      )
     } catch (error) {
       return null
     }
