@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.3.3] - 2022-07-13
+
 ### Fixed
 
 - Fixed a bug where the Adyen Menu page got seller's account status from first account listed instead of first active account
