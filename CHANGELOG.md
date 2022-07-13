@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed a bug where the Adyen Menu page got seller's account status from first account listed instead of first active account
+- Fixed a bug where Payouts dropdown in Seller Detail page displayed `Daily` instead of saved payout schedule
+
 ## [0.3.2] - 2022-06-08
 
 ### Added

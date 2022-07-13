@@ -1,5 +1,5 @@
 import type { FC } from 'react'
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import { useMutation } from 'react-apollo'
 import {
   Box,
@@ -55,74 +55,94 @@ const SellerPayouts: FC<any> = () => {
 
   const [updateAccount] = useMutation(UPDATE_ACCOUNT)
   const [account] = adyenAccountHolder?.accounts || []
+
   const state = useSelectState({
     items: SCHEDULE_OPTIONS,
     itemToString: (item: any) => item.label,
-    initialSelectedItem:
-      SCHEDULE_OPTIONS.find(
-        i => i.value === account?.payoutSchedule.schedule
-      ) ?? SCHEDULE_OPTIONS[0],
+    initialSelectedItem: SCHEDULE_OPTIONS[0],
   })
 
+  useEffect(() => {
+    if (!account?.payoutSchedule.schedule) {
+      return
+    }
+
+    const selectedItem: any =
+      SCHEDULE_OPTIONS.find(
+        i => i.value === account?.payoutSchedule.schedule
+      ) ?? SCHEDULE_OPTIONS[0]
+
+    state.selectItem(selectedItem)
+  }, [account?.payoutSchedule.schedule])
+
+  const handleUpdate = async (setContextState: any) => {
+    setIsLoading(true)
+
+    try {
+      const response = await updateAccount({
+        variables: {
+          accountCode: account.accountCode,
+          schedule: state.selectedItem?.value,
+        },
+      })
+
+      account.payoutSchedule.schedule = response.data.updateAccount.schedule
+      setContextState({ adyenAccountHolder })
+    } catch (err) {
+      setIsLoading(false)
+
+      toast.dispatch({
+        type: 'error',
+        message: 'Unable to update payout schedule',
+      })
+
+      return
+    }
+
+    setIsLoading(false)
+    toast.dispatch({
+      type: 'success',
+      message: 'Payout schedule updated',
+    })
+  }
+
   return (
-    <Columns spacing={1}>
-      <Columns.Item>
-        <Box>
-          <Set orientation="vertical" spacing={3} fluid>
-            <Heading>Payouts</Heading>
-            <Paragraph csx={{ width: '60%' }}>
-              Set seller payout schedule.
-            </Paragraph>
-            <Set spacing={3}>
-              <Select
-                items={SCHEDULE_OPTIONS}
-                state={state}
-                label="Schedule"
-                renderItem={(item: any) => item.label}
-              />
-              <Paragraph csx={{ width: '60%' }}>
-                {state.selectedItem?.description}
-              </Paragraph>
-            </Set>
-          </Set>
-        </Box>
-        <Button
-          loading={isLoading}
-          disabled={!adyenAccountHolder}
-          variant="primary"
-          csx={{ marginTop: '20px' }}
-          onClick={async (_e: any) => {
-            setIsLoading(true)
-
-            try {
-              await updateAccount({
-                variables: {
-                  accountCode: account.accountCode,
-                  schedule: state.selectedItem?.value,
-                },
-              })
-            } catch (err) {
-              setIsLoading(false)
-
-              toast.dispatch({
-                type: 'error',
-                message: 'Unable to update payout schedule',
-              })
-
-              return
-            }
-
-            setIsLoading(false)
-            toast.dispatch({
-              type: 'success',
-              message: 'Payout schedule updated',
-            })
-          }}
-        >
-          Save
-        </Button>
-      </Columns.Item>
-    </Columns>
+    <StateContext.Consumer>
+      {({ setContextState }) => (
+        <Columns spacing={1}>
+          <Columns.Item>
+            <Box>
+              <Set orientation="vertical" spacing={3} fluid>
+                <Heading>Payouts</Heading>
+                <Paragraph csx={{ width: '60%' }}>
+                  Set seller payout schedule.
+                </Paragraph>
+                <Set spacing={3}>
+                  <Select
+                    items={SCHEDULE_OPTIONS}
+                    state={state}
+                    label="Schedule"
+                    renderItem={(item: any) => item.label}
+                  />
+                  <Paragraph csx={{ width: '60%' }}>
+                    {state.selectedItem?.description}
+                  </Paragraph>
+                </Set>
+              </Set>
+            </Box>
+            <Button
+              loading={isLoading}
+              disabled={!adyenAccountHolder}
+              variant="primary"
+              csx={{ marginTop: '20px' }}
+              onClick={() => handleUpdate(setContextState)}
+            >
+              Save
+            </Button>
+          </Columns.Item>
+        </Columns>
+      )}
+    </StateContext.Consumer>
   )
 }
 
