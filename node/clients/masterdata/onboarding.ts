@@ -31,17 +31,20 @@ const ONBOARDING_SCHEMA = {
   },
 }
 
+interface Ionboarding {
+  id: string
+  accountHolderCode: string
+  urlToken: string
+  expirationTimestamp: number
+}
+
 export class Onboarding extends MasterData {
   private checkSchema = async () => {
-    try {
-      return await this.createOrUpdateSchema({
-        dataEntity: DATA_ENTITY,
-        schemaName: ONBOARDING_SCHEMA_VERSION,
-        schemaBody: ONBOARDING_SCHEMA,
-      })
-    } catch (_err) {
-      return null
-    }
+    return this.createOrUpdateSchema({
+      dataEntity: DATA_ENTITY,
+      schemaName: ONBOARDING_SCHEMA_VERSION,
+      schemaBody: ONBOARDING_SCHEMA,
+    }).catch(() => null)
   }
 
   public async update(
@@ -50,16 +53,12 @@ export class Onboarding extends MasterData {
   ) {
     await this.checkSchema()
 
-    try {
-      return await this.updatePartialDocument({
-        id,
-        dataEntity: DATA_ENTITY,
-        fields: data,
-        schema: ONBOARDING_SCHEMA_VERSION,
-      })
-    } catch (err) {
-      return null
-    }
+    return this.updatePartialDocument({
+      id,
+      dataEntity: DATA_ENTITY,
+      fields: data,
+      schema: ONBOARDING_SCHEMA_VERSION,
+    })
   }
 
   public async create({
@@ -73,14 +72,10 @@ export class Onboarding extends MasterData {
   }) {
     await this.checkSchema()
 
-    try {
-      return this.createDocument({
-        dataEntity: DATA_ENTITY,
-        fields: data,
-      })
-    } catch (err) {
-      return null
-    }
+    return this.createDocument({
+      dataEntity: DATA_ENTITY,
+      fields: data,
+    })
   }
 
   public async find(data: { [key: string]: string }) {
@@ -95,18 +90,11 @@ export class Onboarding extends MasterData {
         where: `${key}=${data[key]}`,
       })
 
-      return response[0] || null
-    } catch (err) {
-      console.error(err)
+      if (!response) return null
 
-      return null
+      return response[0] || null
+    } catch (error) {
+      throw error
     }
   }
-}
-
-interface Ionboarding {
-  id: string
-  accountHolderCode: string
-  urlToken: string
-  expirationTimestamp: number
 }

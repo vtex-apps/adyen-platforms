@@ -6,6 +6,20 @@ export default {
     ctx: Context
     sellerIds: string[]
   }) => {
-    return ctx.clients.account.findBySellerId(sellerIds)
+    const {
+      clients: { account },
+      vtex: { logger },
+    } = ctx
+
+    try {
+      return account.findBySellerId(sellerIds)
+    } catch (error) {
+      logger.warn({
+        error,
+        message: 'adyenPlatforms-findBySellerId',
+      })
+
+      return null
+    }
   },
 }

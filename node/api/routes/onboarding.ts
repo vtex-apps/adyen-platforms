@@ -1,7 +1,12 @@
 import { service } from '../../services'
 
 const startOnboarding = async (ctx: Context) => {
-  const { token: urlToken } = ctx.request.query
+  const {
+    request: {
+      query: { token: urlToken },
+    },
+    vtex: { logger },
+  } = ctx
 
   if (!urlToken || typeof urlToken !== 'string') return
 
@@ -14,8 +19,13 @@ const startOnboarding = async (ctx: Context) => {
     if (!onboardingUrl) return
 
     return ctx.redirect(onboardingUrl)
-  } catch (err) {
-    return (ctx.response.message = err.message)
+  } catch (error) {
+    logger.warn({
+      error,
+      message: 'adyenPlatforms-startOnboarding',
+    })
+
+    return (ctx.response.message = error.message)
   }
 }
 
