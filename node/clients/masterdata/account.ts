@@ -66,6 +66,7 @@ export class Account extends MasterData {
     return this.createDocument({
       dataEntity: DATA_ENTITY,
       fields: data,
+      schema: ACCOUNT_SCHEMA_VERSION,
     })
   }
 
