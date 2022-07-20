@@ -4,6 +4,7 @@ import Adyen from './adyen'
 import { Onboarding } from './masterdata/onboarding'
 import { Account } from './masterdata/account'
 import { SellersClient } from './sellers'
+import IdentityClient from './identity'
 
 export class Clients extends IOClients {
   public get adyenClient() {
@@ -20,5 +21,9 @@ export class Clients extends IOClients {
 
   public get account() {
     return this.getOrSet('account', Account)
+  }
+
+  public get identity() {
+    return this.getOrSet('identity', IdentityClient)
   }
 }
