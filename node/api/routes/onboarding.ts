@@ -25,7 +25,9 @@ const startOnboarding = async (ctx: Context) => {
       message: 'adyenPlatforms-startOnboarding',
     })
 
-    return (ctx.response.message = error.message)
+    ctx.response.message = error.message
+
+    return ctx.response.message
   }
 }
 

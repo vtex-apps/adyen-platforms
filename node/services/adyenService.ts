@@ -111,12 +111,10 @@ export default {
     }
 
     try {
-      const accountHolderResult = await adyenClient.getAccountHolder(
+      return await adyenClient.getAccountHolder(
         accountHolderCode,
         await settings(ctx)
       )
-
-      return accountHolderResult
     } catch (error) {
       logger.warn({
         error,

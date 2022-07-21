@@ -1,7 +1,7 @@
 import { JanusClient } from '@vtex/api'
 import type { IOContext, InstanceOptions } from '@vtex/api'
 
-export default class IdentityClient extends JanusClient {
+export class IdentityClient extends JanusClient {
   constructor(ctx: IOContext, options?: InstanceOptions) {
     super(ctx, {
       ...options,

@@ -12,7 +12,7 @@ export default {
     } = ctx
 
     try {
-      return account.findBySellerId(sellerIds)
+      return await account.findBySellerId(sellerIds)
     } catch (error) {
       logger.warn({
         error,

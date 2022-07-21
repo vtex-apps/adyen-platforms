@@ -16,33 +16,29 @@ export default {
       clients: { onboarding: onboardingClient, adyenClient },
     } = ctx
 
-    try {
-      const onboarding = await onboardingClient.find({ urlToken })
+    const onboarding = await onboardingClient.find({ urlToken })
 
-      if (!onboarding) return null
+    if (!onboarding) return null
 
-      if (onboarding.expirationTimestamp < Date.now()) {
-        throw new Error('Link has expired')
-      }
-
-      const appSettings = await settings(ctx)
-
-      const onboardingCompleteRedirect = appSettings?.onboardingRedirectUrl
-        ? appSettings.onboardingRedirectUrl
-        : buildUrl(ctx, onboarding.accountHolderCode)
-
-      const adyenOnboarding = await adyenClient.getOnboardingUrl({
-        data: {
-          accountHolderCode: onboarding.accountHolderCode,
-          returnUrl: onboardingCompleteRedirect,
-        },
-        settings: appSettings,
-      })
-
-      return adyenOnboarding.redirectUrl ?? null
-    } catch (error) {
-      throw error
+    if (onboarding.expirationTimestamp < Date.now()) {
+      throw new Error('Link has expired')
     }
+
+    const appSettings = await settings(ctx)
+
+    const onboardingCompleteRedirect = appSettings?.onboardingRedirectUrl
+      ? appSettings.onboardingRedirectUrl
+      : buildUrl(ctx, onboarding.accountHolderCode)
+
+    const adyenOnboarding = await adyenClient.getOnboardingUrl({
+      data: {
+        accountHolderCode: onboarding.accountHolderCode,
+        returnUrl: onboardingCompleteRedirect,
+      },
+      settings: appSettings,
+    })
+
+    return adyenOnboarding.redirectUrl ?? null
   },
   getOnboarding: async (ctx: Context, accountHolderCode: string) => {
     const {
@@ -51,7 +47,7 @@ export default {
     } = ctx
 
     try {
-      return onboardingClient.find({
+      return await onboardingClient.find({
         accountHolderCode,
       })
     } catch (error) {

@@ -7,7 +7,7 @@ export const settings = async (context: Context): Promise<any> => {
   } = context
 
   try {
-    return apps.getAppSettings(appId)
+    return await apps.getAppSettings(appId)
   } catch (error) {
     logger.warn({
       error,

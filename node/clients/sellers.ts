@@ -58,15 +58,11 @@ export class SellersClient extends ExternalClient {
   }
 
   public sellers = async () => {
-    try {
-      const sellers = await this.http.get<SellersResponse>(SELLERS_URL, {
-        metric: 'adyen-getSellers',
-      })
+    const sellers = await this.http.get<SellersResponse>(SELLERS_URL, {
+      metric: 'adyen-getSellers',
+    })
 
-      return sellers.items
-    } catch (error) {
-      throw error
-    }
+    return sellers.items
   }
 
   public seller = async (sellerId: string) => {

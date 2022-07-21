@@ -22,12 +22,10 @@ export default {
             for (const account of adyenAccounts) {
               if (
                 account.sellerId === seller.id &&
+                !(adyenAccount?.status === 'Active') &&
                 (!adyenAccount || account.status === 'Active')
               ) {
                 adyenAccount = account
-                if (account.status === 'Active') {
-                  break
-                }
               }
             }
 
