@@ -87,18 +87,13 @@ export class Account extends MasterData {
   public async find(data: { [key: string]: string }) {
     const [key] = Object.keys(data)
 
-    const accounts = await this.searchDocuments<IAdyenAccount>({
+    return this.searchDocuments<IAdyenAccount>({
       dataEntity: DATA_ENTITY,
       fields: ['id', 'sellerId', 'accountHolderCode', 'accountCode', 'status'],
       pagination: { page: 1, pageSize: 100 },
       where: `${key}=${data[key]}`,
       schema: ACCOUNT_SCHEMA_VERSION,
     })
-
-    if (!accounts.length) return null
-
-    // return first active account if available
-    return accounts.find(account => account.status === 'Active') ?? accounts[0]
   }
 
   public async findBySellerId(data: string[]) {
@@ -114,14 +109,11 @@ export class Account extends MasterData {
   }
 
   public async all() {
-    const accounts =
-      await this.searchDocumentsWithPaginationInfo<IAdyenAccount>({
-        dataEntity: DATA_ENTITY,
-        fields: ['sellerId', 'accountHolderCode', 'accountCode', 'status'],
-        pagination: { page: 1, pageSize: 100 },
-        schema: ACCOUNT_SCHEMA_VERSION,
-      })
-
-    return accounts.data
+    return this.searchDocumentsWithPaginationInfo<IAdyenAccount>({
+      dataEntity: DATA_ENTITY,
+      fields: ['sellerId', 'accountHolderCode', 'accountCode', 'status'],
+      pagination: { page: 1, pageSize: 100 },
+      schema: ACCOUNT_SCHEMA_VERSION,
+    })
   }
 }

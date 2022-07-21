@@ -25,10 +25,8 @@ const startOnboarding = async (ctx: Context) => {
       message: 'adyenPlatforms-startOnboardingError',
     })
 
-    // displays message "Link has expired" instead of "Not Found" when accessing expired onboarding page
-    ctx.response.message = error.message
-
-    return ctx.response.message
+    // displays specific message (e.g "Link has expired") instead of generic "Not Found" when accessing expired/invalid onboarding page
+    ctx.response.message = error.response?.data?.message ?? error.message
   }
 }
 

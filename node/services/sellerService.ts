@@ -8,8 +8,8 @@ export default {
     } = ctx
 
     try {
-      const sellers = await sellersClient.sellers()
-      const adyenAccounts = await accountClient.all()
+      const { items: sellers } = await sellersClient.sellers()
+      const { data: adyenAccounts } = await accountClient.all()
       const settingsFetch = await settings(ctx)
 
       const response = await Promise.all(
@@ -75,17 +75,23 @@ export default {
 
     try {
       const seller = await sellersClient.seller(sellerId)
-      const account = await accountClient.find({ sellerId })
+      const accounts = await accountClient.find({ sellerId })
 
-      if (!account) return seller
+      if (!accounts.length) return seller
+
+      const account = accounts.find(a => a.status === 'Active') ?? accounts[0]
+
       const adyenAccountHolder = await adyenClient.getAccountHolder(
         account.accountHolderCode,
         await settings(ctx)
       )
 
-      const adyenOnboarding = await onboardingClient.find({
-        accountHolderCode: account.accountHolderCode,
-      })
+      const [onboarding] =
+        (await onboardingClient.find({
+          accountHolderCode: account.accountHolderCode,
+        })) ?? []
+
+      const adyenOnboarding = onboarding ?? null
 
       return {
         ...seller,

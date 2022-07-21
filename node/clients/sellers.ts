@@ -1,5 +1,5 @@
 import type { InstanceOptions, IOContext } from '@vtex/api'
-import { ExternalClient } from '@vtex/api'
+import { JanusClient } from '@vtex/api'
 
 const SELLERS_URL = '/api/seller-register/pvt/sellers' as const
 
@@ -46,9 +46,9 @@ interface SalesChannel {
   name: string
 }
 
-export class SellersClient extends ExternalClient {
+export class SellersClient extends JanusClient {
   constructor(context: IOContext, options?: InstanceOptions) {
-    super(`http://${context.account}.vtexcommercestable.com.br`, context, {
+    super(context, {
       ...options,
       headers: {
         ...options?.headers,
@@ -58,11 +58,9 @@ export class SellersClient extends ExternalClient {
   }
 
   public sellers = async () => {
-    const sellers = await this.http.get<SellersResponse>(SELLERS_URL, {
+    return this.http.get<SellersResponse>(SELLERS_URL, {
       metric: 'adyen-getSellers',
     })
-
-    return sellers.items
   }
 
   public seller = async (sellerId: string) => {

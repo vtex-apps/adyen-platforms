@@ -12,7 +12,7 @@ export const onboardingMutations = {
     } = ctx
 
     try {
-      const onboarding = await onboardingClient.find(data)
+      const [onboarding] = (await onboardingClient.find(data)) ?? []
 
       if (!onboarding) return
 

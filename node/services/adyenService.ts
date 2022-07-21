@@ -185,9 +185,11 @@ export default {
         return null
       }
 
-      const account = await accountClient.find({ accountHolderCode })
+      const accounts = await accountClient.find({ accountHolderCode })
 
-      if (!account) return
+      if (!accounts.length) return
+
+      const account = accounts.find(a => a.status === 'Active') ?? accounts[0]
 
       const { id, ...update } = account
 

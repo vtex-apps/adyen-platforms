@@ -81,16 +81,12 @@ export class Onboarding extends MasterData {
   public async find(data: { [key: string]: string }) {
     const [key] = Object.keys(data)
 
-    const response = await this.searchDocuments<Ionboarding>({
+    return this.searchDocuments<Ionboarding>({
       dataEntity: DATA_ENTITY,
       fields: ['id', 'accountHolderCode', 'urlToken', 'expirationTimestamp'],
       pagination: { page: 1, pageSize: 100 },
       schema: ONBOARDING_SCHEMA_VERSION,
       where: `${key}=${data[key]}`,
     })
-
-    if (!response) return null
-
-    return response[0] || null
   }
 }

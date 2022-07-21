@@ -16,7 +16,7 @@ export default {
       clients: { onboarding: onboardingClient, adyenClient },
     } = ctx
 
-    const onboarding = await onboardingClient.find({ urlToken })
+    const [onboarding] = (await onboardingClient.find({ urlToken })) ?? []
 
     if (!onboarding) return null
 
@@ -47,9 +47,14 @@ export default {
     } = ctx
 
     try {
-      return await onboardingClient.find({
-        accountHolderCode,
-      })
+      const [onboarding] =
+        (await onboardingClient.find({
+          accountHolderCode,
+        })) ?? []
+
+      if (!onboarding) return null
+
+      return onboarding
     } catch (error) {
       logger.error({
         error,
@@ -100,7 +105,7 @@ export default {
     } = ctx
 
     try {
-      const onboarding = await onboardingClient.find(data)
+      const [onboarding] = (await onboardingClient.find(data)) ?? []
 
       if (!onboarding) return null
 
