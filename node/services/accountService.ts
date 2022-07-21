@@ -14,10 +14,17 @@ export default {
     try {
       return await account.findBySellerId(sellerIds)
     } catch (error) {
-      logger.warn({
-        error,
-        message: 'adyenPlatforms-findBySellerId',
-      })
+      if (error.response.status === 404) {
+        logger.warn({
+          error,
+          message: 'adyenPlatforms-findBySellerIdNotFound',
+        })
+      } else {
+        logger.error({
+          error,
+          message: 'adyenPlatforms-findBySellerIdError',
+        })
+      }
 
       return null
     }

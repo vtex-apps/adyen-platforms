@@ -51,9 +51,9 @@ export default {
         accountHolderCode,
       })
     } catch (error) {
-      logger.warn({
+      logger.error({
         error,
-        message: 'adyenPlatform-getOnboarding',
+        message: 'adyenPlatform-getOnboardingError',
       })
 
       return null
@@ -82,9 +82,9 @@ export default {
         urlToken,
       }
     } catch (error) {
-      logger.warn({
+      logger.error({
         error,
-        message: 'adyenPlatform-createOnboarding',
+        message: 'adyenPlatform-createOnboardingError',
       })
 
       return null
@@ -115,9 +115,9 @@ export default {
 
       return update
     } catch (error) {
-      logger.warn({
+      logger.error({
         error,
-        message: 'adyenPlatform-refreshOnboarding',
+        message: 'adyenPlatform-refreshOnboardingError',
       })
 
       return null

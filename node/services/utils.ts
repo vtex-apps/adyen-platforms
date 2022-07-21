@@ -9,9 +9,9 @@ export const settings = async (context: Context): Promise<any> => {
   try {
     return await apps.getAppSettings(appId)
   } catch (error) {
-    logger.warn({
+    logger.error({
       error,
-      message: 'adyenPlatforms-getAppSettings',
+      message: 'adyenPlatforms-getAppSettingsError',
     })
 
     return null

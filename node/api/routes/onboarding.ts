@@ -20,11 +20,12 @@ const startOnboarding = async (ctx: Context) => {
 
     return ctx.redirect(onboardingUrl)
   } catch (error) {
-    logger.warn({
+    logger.error({
       error,
-      message: 'adyenPlatforms-startOnboarding',
+      message: 'adyenPlatforms-startOnboardingError',
     })
 
+    // displays message "Link has expired" instead of "Not Found" when accessing expired onboarding page
     ctx.response.message = error.message
 
     return ctx.response.message

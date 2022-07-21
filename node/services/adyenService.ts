@@ -70,14 +70,19 @@ export default {
         invalidFields: null,
       }
     } catch (error) {
-      logger.warn({
-        error,
-        message: 'adyenPlatforms-createAccountHolder',
-      })
-
       if (error.response?.data?.invalidFields?.length) {
+        logger.warn({
+          error,
+          message: 'adyenPlatforms-createAccountHolderInvalidFields',
+        })
+
         return { invalidFields: error.response?.data?.invalidFields }
       }
+
+      logger.error({
+        error,
+        message: 'adyenPlatforms-createAccountHolderError',
+      })
 
       return null
     }
@@ -116,9 +121,9 @@ export default {
         await settings(ctx)
       )
     } catch (error) {
-      logger.warn({
+      logger.error({
         error,
-        message: 'adyenPlatforms-getAccountHolder',
+        message: 'adyenPlatforms-getAccountHolderError',
       })
 
       return null
@@ -147,9 +152,9 @@ export default {
         schedule: response.payoutSchedule.schedule,
       }
     } catch (error) {
-      logger.warn({
+      logger.error({
         error,
-        message: 'adyenPlatforms-updateAccount',
+        message: 'adyenPlatforms-updateAccountError',
       })
 
       return null
@@ -190,9 +195,9 @@ export default {
 
       return response.accountHolderStatus
     } catch (error) {
-      logger.warn({
+      logger.error({
         error,
-        message: 'adyenPlatforms-closeAccountHolder',
+        message: 'adyenPlatforms-closeAccountHolderError',
       })
     }
   },

@@ -22,7 +22,7 @@ export default {
             for (const account of adyenAccounts) {
               if (
                 account.sellerId === seller.id &&
-                !(adyenAccount?.status === 'Active') &&
+                adyenAccount?.status !== 'Active' &&
                 (!adyenAccount || account.status === 'Active')
               ) {
                 adyenAccount = account
@@ -54,9 +54,9 @@ export default {
 
       return response
     } catch (error) {
-      logger.warn({
+      logger.error({
         error,
-        message: 'adyenPlatform-allSellers',
+        message: 'adyenPlatform-getAllSellersError',
       })
 
       return []
@@ -93,10 +93,17 @@ export default {
         adyenAccountHolder,
       }
     } catch (error) {
-      logger.warn({
-        error,
-        message: 'adyenPlatform-findOneSeller',
-      })
+      if (error.response.status === 404) {
+        logger.warn({
+          error,
+          message: 'adyenPlatform-findOneSellerNotFound',
+        })
+      } else {
+        logger.error({
+          error,
+          message: 'adyenPlatform-findOneSellerError',
+        })
+      }
 
       return {}
     }

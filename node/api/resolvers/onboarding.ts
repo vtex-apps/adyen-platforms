@@ -24,9 +24,9 @@ export const onboardingMutations = {
         expirationTimestamp: null,
       })
     } catch (error) {
-      logger.warn({
+      logger.error({
         error,
-        message: 'adyenPlatform-onboardingComplete',
+        message: 'adyenPlatform-completeOnboardingError',
       })
     }
   },
