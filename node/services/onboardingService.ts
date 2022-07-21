@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid'
 
-import { settings } from '../utils'
+import { settings } from './utils'
 
 const ONE_DAY = 86400000 as const
 
@@ -12,7 +12,11 @@ const buildUrl = (ctx: any, accountHolderCode: any) => {
 
 export default {
   getOnboardingUrl: async (ctx: Context, urlToken: string) => {
-    const onboarding = await ctx.clients.onboarding.find({ urlToken })
+    const {
+      clients: { onboarding: onboardingClient, adyenClient },
+    } = ctx
+
+    const [onboarding] = (await onboardingClient.find({ urlToken })) ?? []
 
     if (!onboarding) return null
 
@@ -21,11 +25,12 @@ export default {
     }
 
     const appSettings = await settings(ctx)
-    const onboardingCompleteRedirect = appSettings.onboardingRedirectUrl
+
+    const onboardingCompleteRedirect = appSettings?.onboardingRedirectUrl
       ? appSettings.onboardingRedirectUrl
       : buildUrl(ctx, onboarding.accountHolderCode)
 
-    const adyenOnboarding = await ctx.clients.adyenClient.getOnboardingUrl({
+    const adyenOnboarding = await adyenClient.getOnboardingUrl({
       data: {
         accountHolderCode: onboarding.accountHolderCode,
         returnUrl: onboardingCompleteRedirect,
@@ -33,47 +38,94 @@ export default {
       settings: appSettings,
     })
 
-    return adyenOnboarding?.redirectUrl ?? null
+    return adyenOnboarding.redirectUrl ?? null
   },
   getOnboarding: async (ctx: Context, accountHolderCode: string) => {
-    return ctx.clients.onboarding.find({
-      accountHolderCode,
-    })
+    const {
+      clients: { onboarding: onboardingClient },
+      vtex: { logger },
+    } = ctx
+
+    try {
+      const [onboarding] =
+        (await onboardingClient.find({
+          accountHolderCode,
+        })) ?? []
+
+      if (!onboarding) return null
+
+      return onboarding
+    } catch (error) {
+      logger.error({
+        error,
+        message: 'adyenPlatform-getOnboardingError',
+      })
+
+      return null
+    }
   },
   create: async (ctx: Context, accountHolderCode: string) => {
+    const {
+      clients: { onboarding: onboardingClient },
+      vtex: { logger },
+    } = ctx
+
     const urlToken = uuidv4()
     const expirationTimestamp = Date.now() + 7 * ONE_DAY
 
-    await ctx.clients.onboarding.create({
-      data: {
+    try {
+      await onboardingClient.create({
+        data: {
+          accountHolderCode,
+          urlToken,
+          expirationTimestamp,
+        },
+      })
+
+      return {
         accountHolderCode,
         urlToken,
-        expirationTimestamp,
-      },
-    })
+      }
+    } catch (error) {
+      logger.error({
+        error,
+        message: 'adyenPlatform-createOnboardingError',
+      })
 
-    return {
-      accountHolderCode,
-      urlToken,
+      return null
     }
   },
   refreshOnboarding: async (
     ctx: Context,
     data: { accountHolderCode: string }
   ) => {
-    const onboarding = await ctx.clients.onboarding.find(data)
+    const {
+      clients: { onboarding: onboardingClient },
+      vtex: { logger },
+    } = ctx
 
-    if (!onboarding) return null
+    try {
+      const [onboarding] = (await onboardingClient.find(data)) ?? []
 
-    const { id, ...update } = onboarding
+      if (!onboarding) return null
 
-    update.urlToken = uuidv4()
+      const { id, ...update } = onboarding
 
-    await ctx.clients.onboarding.update(id, {
-      ...update,
-      expirationTimestamp: Date.now() + 7 * ONE_DAY,
-    })
+      update.urlToken = uuidv4()
 
-    return update
+      await onboardingClient.update(id, {
+        ...update,
+        expirationTimestamp: Date.now() + 7 * ONE_DAY,
+      })
+
+      return update
+    } catch (error) {
+      logger.error({
+        error,
+        message: 'adyenPlatform-refreshOnboardingError',
+      })
+
+      return null
+    }
   },
 }

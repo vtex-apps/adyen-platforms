@@ -6,6 +6,27 @@ export default {
     ctx: Context
     sellerIds: string[]
   }) => {
-    return ctx.clients.account.findBySellerId(sellerIds)
+    const {
+      clients: { account },
+      vtex: { logger },
+    } = ctx
+
+    try {
+      return await account.findBySellerId(sellerIds)
+    } catch (error) {
+      if (error.response.status === 404) {
+        logger.warn({
+          error,
+          message: 'adyenPlatforms-findBySellerIdNotFound',
+        })
+      } else {
+        logger.error({
+          error,
+          message: 'adyenPlatforms-findBySellerIdError',
+        })
+      }
+
+      return null
+    }
   },
 }

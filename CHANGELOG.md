@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+
+- Error logging
+- GraphQL directive to check user access before running mutations and queries
+- Admin access restriction
+
 ## [0.3.3] - 2022-07-13
 
 ### Fixed

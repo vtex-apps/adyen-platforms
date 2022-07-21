@@ -31,17 +31,20 @@ const ONBOARDING_SCHEMA = {
   },
 }
 
+interface Ionboarding {
+  id: string
+  accountHolderCode: string
+  urlToken: string
+  expirationTimestamp: number
+}
+
 export class Onboarding extends MasterData {
   private checkSchema = async () => {
-    try {
-      return await this.createOrUpdateSchema({
-        dataEntity: DATA_ENTITY,
-        schemaName: ONBOARDING_SCHEMA_VERSION,
-        schemaBody: ONBOARDING_SCHEMA,
-      })
-    } catch (_err) {
-      return null
-    }
+    return this.createOrUpdateSchema({
+      dataEntity: DATA_ENTITY,
+      schemaName: ONBOARDING_SCHEMA_VERSION,
+      schemaBody: ONBOARDING_SCHEMA,
+    }).catch(() => null)
   }
 
   public async update(
@@ -50,16 +53,12 @@ export class Onboarding extends MasterData {
   ) {
     await this.checkSchema()
 
-    try {
-      return await this.updatePartialDocument({
-        id,
-        dataEntity: DATA_ENTITY,
-        fields: data,
-        schema: ONBOARDING_SCHEMA_VERSION,
-      })
-    } catch (err) {
-      return null
-    }
+    return this.updatePartialDocument({
+      id,
+      dataEntity: DATA_ENTITY,
+      fields: data,
+      schema: ONBOARDING_SCHEMA_VERSION,
+    })
   }
 
   public async create({
@@ -73,40 +72,21 @@ export class Onboarding extends MasterData {
   }) {
     await this.checkSchema()
 
-    try {
-      return this.createDocument({
-        dataEntity: DATA_ENTITY,
-        fields: data,
-      })
-    } catch (err) {
-      return null
-    }
+    return this.createDocument({
+      dataEntity: DATA_ENTITY,
+      fields: data,
+    })
   }
 
   public async find(data: { [key: string]: string }) {
     const [key] = Object.keys(data)
 
-    try {
-      const response = await this.searchDocuments<Ionboarding>({
-        dataEntity: DATA_ENTITY,
-        fields: ['id', 'accountHolderCode', 'urlToken', 'expirationTimestamp'],
-        pagination: { page: 1, pageSize: 100 },
-        schema: ONBOARDING_SCHEMA_VERSION,
-        where: `${key}=${data[key]}`,
-      })
-
-      return response[0] || null
-    } catch (err) {
-      console.error(err)
-
-      return null
-    }
+    return this.searchDocuments<Ionboarding>({
+      dataEntity: DATA_ENTITY,
+      fields: ['id', 'accountHolderCode', 'urlToken', 'expirationTimestamp'],
+      pagination: { page: 1, pageSize: 100 },
+      schema: ONBOARDING_SCHEMA_VERSION,
+      where: `${key}=${data[key]}`,
+    })
   }
-}
-
-interface Ionboarding {
-  id: string
-  accountHolderCode: string
-  urlToken: string
-  expirationTimestamp: number
 }
