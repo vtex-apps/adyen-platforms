@@ -1,10 +1,34 @@
 import { settings } from './utils'
 
+function getAccount({
+  seller,
+  adyenAccounts,
+}: {
+  seller: any
+  adyenAccounts: any
+}): SellerAccount | null {
+  let adyenAccount: SellerAccount | null = null
+
+  for (const account of adyenAccounts) {
+    if (
+      account.sellerId === seller.id &&
+      (!adyenAccount || account.status === 'Active')
+    ) {
+      adyenAccount = account
+      if (account.status === 'Active') {
+        break
+      }
+    }
+  }
+
+  return adyenAccount
+}
+
 export default {
   all: async ({ ctx }: { ctx: Context }) => {
     const {
       clients: { sellersClient, account: accountClient, adyenClient },
-      vtex: { logger, account: currentAccount },
+      vtex: { logger },
     } = ctx
 
     try {
@@ -15,23 +39,14 @@ export default {
       const response = await Promise.all(
         sellers
           .reduce((prev, seller) => {
-            if (seller.account === currentAccount) return prev
-
-            let adyenAccount: SellerAccount | null = null
-
-            for (const account of adyenAccounts) {
-              if (
-                account.sellerId === seller.id &&
-                adyenAccount?.status !== 'Active' &&
-                (!adyenAccount || account.status === 'Active')
-              ) {
-                adyenAccount = account
-              }
-            }
+            if (seller.account === ctx.vtex.account) return prev
 
             prev.push({
               ...seller,
-              adyenAccount,
+              adyenAccount: getAccount({
+                seller,
+                adyenAccounts,
+              }),
             })
 
             return prev
