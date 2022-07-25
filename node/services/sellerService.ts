@@ -53,14 +53,18 @@ export default {
           }, [] as any)
           .map(async (seller: any) => {
             if (seller?.adyenAccount) {
-              const accountStatus = await adyenClient.getAccountHolder(
-                seller?.adyenAccount?.accountHolderCode,
-                settingsFetch
-              )
+              return adyenClient
+                .getAccountHolder(
+                  seller.adyenAccount.accountHolderCode,
+                  settingsFetch
+                )
+                .then(accountHolder => {
+                  seller.adyenAccount.status =
+                    accountHolder?.accountHolderStatus.status ??
+                    seller.adyenAccount.status
 
-              seller.adyenAccount.status =
-                accountStatus?.accountHolderStatus.status ??
-                seller.adyenAccount.status
+                  return seller
+                })
             }
 
             return seller
