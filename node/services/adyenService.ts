@@ -3,7 +3,7 @@ import type {
   AccountUpdateDTO,
 } from '../api/resolvers/adyen'
 import { service } from '.'
-import { settings } from '../utils'
+import { settings } from './utils'
 
 export default {
   createAccountHolder: async ({
@@ -13,6 +13,11 @@ export default {
     ctx: Context
     data: CreateAccountHolderDTO
   }) => {
+    const {
+      clients: { adyenClient, account },
+      vtex: { logger },
+    } = ctx
+
     const {
       country,
       legalBusinessName,
@@ -37,35 +42,49 @@ export default {
       },
     }
 
-    const adyenAccountHolder =
-      await ctx.clients.adyenClient.createAccountHolder(
+    try {
+      const adyenAccountHolder = await adyenClient.createAccountHolder(
         accountHolder,
         await settings(ctx)
       )
 
-    if (!adyenAccountHolder) return
-    if (adyenAccountHolder.invalidFields?.length) {
-      return { invalidFields: adyenAccountHolder.invalidFields }
-    }
+      if (!adyenAccountHolder) return
 
-    const { accountHolderCode, accountHolderStatus, accountCode } =
-      adyenAccountHolder
+      const { accountHolderCode, accountHolderStatus, accountCode } =
+        adyenAccountHolder
 
-    const onboarding = await service.onboarding.create(ctx, accountHolderCode)
+      const onboarding = await service.onboarding.create(ctx, accountHolderCode)
 
-    await ctx.clients.account.save({
-      data: {
-        sellerId,
-        accountHolderCode,
-        accountCode,
-        status: accountHolderStatus.status,
-      },
-    })
+      await account.save({
+        data: {
+          sellerId,
+          accountHolderCode,
+          accountCode,
+          status: accountHolderStatus.status,
+        },
+      })
 
-    return {
-      onboarding,
-      adyenAccountHolder: accountHolder,
-      invalidFields: null,
+      return {
+        onboarding,
+        adyenAccountHolder: accountHolder,
+        invalidFields: null,
+      }
+    } catch (error) {
+      if (error.response?.data?.invalidFields?.length) {
+        logger.warn({
+          error,
+          message: 'adyenPlatforms-createAccountHolderInvalidFields',
+        })
+
+        return { invalidFields: error.response?.data?.invalidFields }
+      }
+
+      logger.error({
+        error,
+        message: 'adyenPlatforms-createAccountHolderError',
+      })
+
+      return null
     }
   },
   getAccountHolder: async ({
@@ -75,6 +94,11 @@ export default {
     ctx: Context
     data: { sellerId: string }
   }) => {
+    const {
+      clients: { adyenClient },
+      vtex: { logger },
+    } = ctx
+
     const accounts = await service.account.findBySellerId({
       ctx,
       sellerIds: [data.sellerId],
@@ -91,12 +115,19 @@ export default {
       }
     }
 
-    const accountHolderResult = await ctx.clients.adyenClient.getAccountHolder(
-      accountHolderCode,
-      await settings(ctx)
-    )
+    try {
+      return await adyenClient.getAccountHolder(
+        accountHolderCode,
+        await settings(ctx)
+      )
+    } catch (error) {
+      logger.error({
+        error,
+        message: 'adyenPlatforms-getAccountHolderError',
+      })
 
-    return accountHolderResult
+      return null
+    }
   },
   updateAccount: async ({
     ctx,
@@ -105,14 +136,28 @@ export default {
     ctx: Context
     data: AccountUpdateDTO
   }) => {
-    const response = await ctx.clients.adyenClient.updateAccount({
-      settings: await settings(ctx),
-      data,
-    })
+    const {
+      clients: { adyenClient },
+      vtex: { logger },
+    } = ctx
 
-    return {
-      accountCode: response.accountCode,
-      schedule: response.payoutSchedule.schedule,
+    try {
+      const response = await adyenClient.updateAccount({
+        settings: await settings(ctx),
+        data,
+      })
+
+      return {
+        accountCode: response.accountCode,
+        schedule: response.payoutSchedule.schedule,
+      }
+    } catch (error) {
+      logger.error({
+        error,
+        message: 'adyenPlatforms-updateAccountError',
+      })
+
+      return null
     }
   },
   closeAccountHolder: async ({
@@ -122,26 +167,40 @@ export default {
     ctx: Context
     data: { accountHolderCode: string }
   }) => {
-    const response = await ctx.clients.adyenClient.closeAccountHolder(
-      accountHolderCode,
-      await settings(ctx)
-    )
+    const {
+      clients: { adyenClient, account: accountClient },
+      vtex: { logger },
+    } = ctx
 
-    if (
-      !response?.accountHolderStatus ||
-      response.accountHolderStatus.status !== 'Closed'
-    ) {
-      return null
+    try {
+      const response = await adyenClient.closeAccountHolder(
+        accountHolderCode,
+        await settings(ctx)
+      )
+
+      if (
+        !response?.accountHolderStatus ||
+        response.accountHolderStatus.status !== 'Closed'
+      ) {
+        return null
+      }
+
+      const accounts = await accountClient.find({ accountHolderCode })
+
+      if (!accounts.length) return
+
+      const account = accounts.find(a => a.status === 'Active') ?? accounts[0]
+
+      const { id, ...update } = account
+
+      await accountClient.update(id, { ...update, status: 'Closed' })
+
+      return response.accountHolderStatus
+    } catch (error) {
+      logger.error({
+        error,
+        message: 'adyenPlatforms-closeAccountHolderError',
+      })
     }
-
-    const account = await ctx.clients.account.find({ accountHolderCode })
-
-    if (!account) return
-
-    const { id, ...update } = account
-
-    await ctx.clients.account.update(id, { ...update, status: 'Closed' })
-
-    return response.accountHolderStatus
   },
 }

@@ -6,17 +6,29 @@ export const onboardingMutations = {
     data: { accountHolderCode: string },
     ctx: Context
   ) => {
-    const onboarding = await ctx.clients.onboarding.find(data)
+    const {
+      clients: { onboarding: onboardingClient },
+      vtex: { logger },
+    } = ctx
 
-    if (!onboarding) return
+    try {
+      const [onboarding] = (await onboardingClient.find(data)) ?? []
 
-    const { id, ...update } = onboarding
+      if (!onboarding) return
 
-    await ctx.clients.onboarding.update(id, {
-      ...update,
-      urlToken: null,
-      expirationTimestamp: null,
-    })
+      const { id, ...update } = onboarding
+
+      await onboardingClient.update(id, {
+        ...update,
+        urlToken: null,
+        expirationTimestamp: null,
+      })
+    } catch (error) {
+      logger.error({
+        error,
+        message: 'adyenPlatform-completeOnboardingError',
+      })
+    }
   },
   refreshOnboarding: async (
     _: unknown,

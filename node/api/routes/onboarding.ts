@@ -1,7 +1,12 @@
 import { service } from '../../services'
 
 const startOnboarding = async (ctx: Context) => {
-  const { token: urlToken } = ctx.request.query
+  const {
+    request: {
+      query: { token: urlToken },
+    },
+    vtex: { logger },
+  } = ctx
 
   if (!urlToken || typeof urlToken !== 'string') return
 
@@ -14,8 +19,14 @@ const startOnboarding = async (ctx: Context) => {
     if (!onboardingUrl) return
 
     return ctx.redirect(onboardingUrl)
-  } catch (err) {
-    return (ctx.response.message = err.message)
+  } catch (error) {
+    logger.error({
+      error,
+      message: 'adyenPlatforms-startOnboardingError',
+    })
+
+    // displays specific message (e.g "Link has expired") instead of generic "Not Found" when accessing expired/invalid onboarding page
+    ctx.response.message = error.response?.data?.message ?? error.message
   }
 }
 

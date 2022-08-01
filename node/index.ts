@@ -4,6 +4,7 @@ import { Service } from '@vtex/api'
 import { Clients } from './clients'
 import { resolvers } from './api/resolvers'
 import { routes } from './api/routes'
+import { schemaDirectives } from './directives'
 
 const MEDIUM_TIMEOUT_MS = 2 * 1000
 
@@ -22,6 +23,7 @@ export default new Service<Clients, RecorderState, ParamsContext>({
   },
   graphql: {
     resolvers,
+    schemaDirectives,
   },
   routes,
 })

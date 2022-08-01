@@ -1,74 +1,136 @@
-import { settings } from '../utils'
+import { settings } from './utils'
+
+function getAccount({
+  seller,
+  adyenAccounts,
+}: {
+  seller: any
+  adyenAccounts: any
+}): SellerAccount | null {
+  let adyenAccount: SellerAccount | null = null
+
+  for (const account of adyenAccounts) {
+    if (
+      account.sellerId === seller.id &&
+      (!adyenAccount || account.status === 'Active')
+    ) {
+      adyenAccount = account
+      if (account.status === 'Active') {
+        break
+      }
+    }
+  }
+
+  return adyenAccount
+}
 
 export default {
   all: async ({ ctx }: { ctx: Context }) => {
-    const sellers = await ctx.clients.sellersClient.sellers()
-    const adyenAccounts = await ctx.clients.account.all()
-    const settingsFetch = await settings(ctx)
+    const {
+      clients: { sellersClient, account: accountClient, adyenClient },
+      vtex: { logger },
+    } = ctx
 
-    const response = await Promise.all(
-      sellers
-        .reduce((prev, seller) => {
-          if (seller.account === ctx.vtex.account) return prev
+    try {
+      const { items: sellers } = await sellersClient.sellers()
+      const { data: adyenAccounts } = await accountClient.all()
+      const settingsFetch = await settings(ctx)
 
-          let adyenAccount: SellerAccount | null = null
+      const response = await Promise.all(
+        sellers
+          .reduce((prev, seller) => {
+            if (seller.account === ctx.vtex.account) return prev
 
-          for (const account of adyenAccounts) {
-            if (
-              account.sellerId === seller.id &&
-              (!adyenAccount || account.status === 'Active')
-            ) {
-              adyenAccount = account
-              if (account.status === 'Active') {
-                break
-              }
+            prev.push({
+              ...seller,
+              adyenAccount: getAccount({
+                seller,
+                adyenAccounts,
+              }),
+            })
+
+            return prev
+          }, [] as any)
+          .map(async (seller: any) => {
+            if (seller?.adyenAccount) {
+              return adyenClient
+                .getAccountHolder(
+                  seller.adyenAccount.accountHolderCode,
+                  settingsFetch
+                )
+                .then(accountHolder => {
+                  seller.adyenAccount.status =
+                    accountHolder?.accountHolderStatus.status ??
+                    seller.adyenAccount.status
+
+                  return seller
+                })
             }
-          }
 
-          prev.push({
-            ...seller,
-            adyenAccount,
+            return seller
           })
+      )
 
-          return prev
-        }, [] as any)
-        .map(async (seller: any) => {
-          if (seller?.adyenAccount) {
-            const accountStatus =
-              await ctx.clients.adyenClient.getAccountHolder(
-                seller?.adyenAccount?.accountHolderCode,
-                settingsFetch
-              )
+      return response
+    } catch (error) {
+      logger.error({
+        error,
+        message: 'adyenPlatform-getAllSellersError',
+      })
 
-            seller.adyenAccount.status =
-              accountStatus?.accountHolderStatus.status ??
-              seller.adyenAccount.status
-          }
-
-          return seller
-        })
-    )
-
-    return response
+      return []
+    }
   },
   findOne: async (sellerId: string, ctx: Context) => {
-    const seller = await ctx.clients.sellersClient.seller(sellerId)
-    const account = await ctx.clients.account.find({ sellerId })
+    const {
+      clients: {
+        sellersClient,
+        account: accountClient,
+        adyenClient,
+        onboarding: onboardingClient,
+      },
+      vtex: { logger },
+    } = ctx
 
-    if (!account) return seller
-    const adyenAccountHolder = await ctx.clients.adyenClient.getAccountHolder(
-      account.accountHolderCode,
-      await settings(ctx)
-    )
+    try {
+      const seller = await sellersClient.seller(sellerId)
+      const accounts = await accountClient.find({ sellerId })
 
-    const adyenOnboarding = await ctx.clients.onboarding.find({
-      accountHolderCode: account.accountHolderCode,
-    })
+      if (!accounts.length) return seller
 
-    return {
-      ...seller,
-      adyenOnboarding,
-      adyenAccountHolder,
+      const account = accounts.find(a => a.status === 'Active') ?? accounts[0]
+
+      const adyenAccountHolder = await adyenClient.getAccountHolder(
+        account.accountHolderCode,
+        await settings(ctx)
+      )
+
+      const [onboarding] =
+        (await onboardingClient.find({
+          accountHolderCode: account.accountHolderCode,
+        })) ?? []
+
+      const adyenOnboarding = onboarding ?? null
+
+      return {
+        ...seller,
+        adyenOnboarding,
+        adyenAccountHolder,
+      }
+    } catch (error) {
+      if (error.response.status === 404) {
+        logger.warn({
+          error,
+          message: 'adyenPlatform-findOneSellerNotFound',
+        })
+      } else {
+        logger.error({
+          error,
+          message: 'adyenPlatform-findOneSellerError',
+        })
+      }
+
+      return {}
     }
   },
 }

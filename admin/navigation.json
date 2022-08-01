@@ -1,6 +1,9 @@
-{
-  "section": "marketplace",
-  "titleId": "adyen.navigation.label-group",
-  "searchKeyWordsHelpers": "adyen.navigation.search.kws",
-  "path": "/admin/adyen-for-platforms"
-}
+[
+  {
+    "section": "marketplace",
+    "LMProductId": "2",
+    "titleId": "adyen.navigation.label-group",
+    "searchKeyWordsHelpers": "adyen.navigation.search.kws",
+    "path": "/admin/adyen-for-platforms"
+  }
+]
