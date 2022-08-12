@@ -161,12 +161,12 @@ export default {
         payoutSchedule: { schedule },
       } = response
 
-      const updatedPayoutSchedules = await vbase.getJSON<{
+      const savedPayoutSchedules = await vbase.getJSON<{
         [accountCode: string]: string
       }>('adyen-platforms', 'updatedPayoutSchedule', true)
 
       await vbase.saveJSON('adyen-platforms', 'updatedPayoutSchedule', {
-        ...updatedPayoutSchedules,
+        ...savedPayoutSchedules,
         [accountCode]: schedule,
       })
 

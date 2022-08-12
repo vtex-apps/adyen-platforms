@@ -27,13 +27,13 @@ export const replaceDefaultSchedule = async (
     clients: { vbase },
   } = context
 
-  const recentlySavedSchedules = await vbase.getJSON<{
+  const savedPayoutSchedules = await vbase.getJSON<{
     [accountCode: string]: string
   }>('adyen-platforms', 'updatedPayoutSchedule', true)
 
   if (
-    !recentlySavedSchedules ||
-    !Object.prototype.hasOwnProperty.call(recentlySavedSchedules, accountCode)
+    !savedPayoutSchedules ||
+    !Object.prototype.hasOwnProperty.call(savedPayoutSchedules, accountCode)
   ) {
     return accounts
   }
@@ -46,7 +46,7 @@ export const replaceDefaultSchedule = async (
       return {
         ...account,
         payoutSchedule: {
-          schedule: recentlySavedSchedules[accountCode],
+          schedule: savedPayoutSchedules[accountCode],
         },
       }
     }
