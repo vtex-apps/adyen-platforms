@@ -42,11 +42,6 @@ const SCHEDULE_OPTIONS = [
     value: 'BIWEEKLY_ON_1ST_AND_15TH_AT_MIDNIGHT',
     description: 'Monthly on the 1st and 15th at midnight (00:00:00 CET).',
   },
-  {
-    label: 'Yearly',
-    value: 'YEARLY',
-    description: 'Every year on January 1st at midnight (00:00:00 CET).',
-  },
 ]
 
 const SellerPayouts: FC<any> = () => {

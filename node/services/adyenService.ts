@@ -3,7 +3,7 @@ import type {
   AccountUpdateDTO,
 } from '../api/resolvers/adyen'
 import { service } from '.'
-import { settings } from './utils'
+import { settings, replaceDefaultSchedule } from './utils'
 
 export default {
   createAccountHolder: async ({
@@ -106,20 +106,29 @@ export default {
 
     if (!accounts) return null
 
-    let [{ accountHolderCode }] = accounts
+    let [{ accountHolderCode, accountCode }] = accounts
 
     for (const account of accounts) {
       if (account.status !== 'Closed') {
         accountHolderCode = account.accountHolderCode
+        accountCode = account.accountCode
         break
       }
     }
 
     try {
-      return await adyenClient.getAccountHolder(
+      const accountHolder = await adyenClient.getAccountHolder(
         accountHolderCode,
         await settings(ctx)
       )
+
+      accountHolder.accounts = await replaceDefaultSchedule(
+        ctx,
+        accountHolder.accounts,
+        accountCode
+      )
+
+      return accountHolder
     } catch (error) {
       logger.error({
         error,
@@ -137,7 +146,7 @@ export default {
     data: AccountUpdateDTO
   }) => {
     const {
-      clients: { adyenClient },
+      clients: { adyenClient, vbase },
       vtex: { logger },
     } = ctx
 
@@ -147,9 +156,23 @@ export default {
         data,
       })
 
+      const {
+        accountCode,
+        payoutSchedule: { schedule },
+      } = response
+
+      const updatedPayoutSchedules = await vbase.getJSON<{
+        [accountCode: string]: string
+      }>('adyen-platforms', 'updatedPayoutSchedule', true)
+
+      await vbase.saveJSON('adyen-platforms', 'updatedPayoutSchedule', {
+        ...updatedPayoutSchedules,
+        [accountCode]: schedule,
+      })
+
       return {
-        accountCode: response.accountCode,
-        schedule: response.payoutSchedule.schedule,
+        accountCode,
+        schedule,
       }
     } catch (error) {
       logger.error({

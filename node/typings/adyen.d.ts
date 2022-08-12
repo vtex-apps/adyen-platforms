@@ -14,6 +14,14 @@ interface GetAccountHolderResponse {
       checks: Check[]
     }
   }
+  accounts: Account[]
+}
+
+interface Account {
+  accountCode: string
+  payoutSchedule: {
+    schedule: string
+  }
 }
 
 interface GetOnboardingUrlRequest {
