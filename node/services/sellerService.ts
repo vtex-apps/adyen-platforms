@@ -1,4 +1,4 @@
-import { settings } from './utils'
+import { replaceDefaultSchedule, settings } from './utils'
 
 function getAccount({
   seller,
@@ -103,6 +103,12 @@ export default {
       const adyenAccountHolder = await adyenClient.getAccountHolder(
         account.accountHolderCode,
         await settings(ctx)
+      )
+
+      adyenAccountHolder.accounts = await replaceDefaultSchedule(
+        ctx,
+        adyenAccountHolder.accounts,
+        account.accountCode
       )
 
       const [onboarding] =

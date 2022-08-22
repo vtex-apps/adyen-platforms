@@ -47,7 +47,7 @@ const SellerDetail: FC = () => {
     onCompleted: () => {
       setState((prevState: any) => ({
         ...prevState,
-        adyenAccountHolder: adyenData.adyenAccountHolder,
+        adyenAccountHolder: adyenData?.adyenAccountHolder,
       }))
     },
   })

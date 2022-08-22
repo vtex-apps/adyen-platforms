@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed label displayed for payout schedule when `DEFAULT` returned by Adyen
+
+### Changed
+
+- Removed `Yearly` payout schedule. Not an option in Adyen
+
 ## [0.4.0] - 2022-08-01
 
 ### Added
