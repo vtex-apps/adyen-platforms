@@ -60,11 +60,35 @@ workspace:
 
 strategy:
   # # The strategies must be in order, with dependent tests last
-  postSetup:
+  post_setup:
     enabled: true
     sendDashboard: true
     hardTries: 1
     stopOnFail: true
     parallel: false
     specs:
-      - cypress/integration/post-setup.spec.js
+      - cypress-shared/integration/adyen/post-setup.spec.js
+  graphql_tests:
+    enabled: true
+    sendDashboard: true
+    hardTries: 1
+    stopOnFail: true
+    parallel: false
+    specs:
+      - cypress-shared/integration/adyen/2.1-graphql_testcases.spec.js
+    dependency:
+      - cypress-shared/integration/adyen/post-setup.spec.js
+  product_tests:
+    enabled: true
+    sendDashboard: true
+    hardTries: 1
+    stopOnFail: true
+    parallel: true
+    specs:
+      - cypress-shared/integration/adyen/2.2-singleProduct.spec.js
+      - cypress-shared/integration/adyen/2.3-multiProduct.spec.js
+      - cypress-shared/integration/adyen/2.4-discountProduct.spec.js
+      - cypress-shared/integration/adyen/2.5-externalSeller.spec.js
+      - cypress-shared/integration/adyen/2.7-promotionalProduct.spec.js
+    dependency:
+      - cypress-shared/integration/adyen/2.1-graphql_testcases.spec.js
