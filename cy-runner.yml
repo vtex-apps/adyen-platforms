@@ -1,0 +1,70 @@
+---
+base:
+  secrets:
+    enabled: true
+    name: VTEX_QE
+  vtex:
+    account: productusqa
+    id: 2001459804
+    domain: myvtex.com
+    urlExternalSeller: https://productusqaseller.myvtex.com
+    vtexIdUrl: https://vtexid.vtex.com.br/api/vtexid/pub/authenticate/default
+  jira:
+    enabled: true
+    account: vtex-dev
+    board: ""
+    issueType: Bug
+    priority: High
+  slack:
+    enabled: false
+    channel: some-channel
+  cypress:
+    devMode: true
+    runHeaded: false
+    projectId: ""
+    getCookies: true
+    maxJobs: 2
+    quiet: true
+    video: false
+    videoCompression: false
+    videoUploadOnPasses: false
+    screenshotOnRunFailure: true
+    trashAssetsBeforeRuns: false
+    viewportWidth: 1440
+    viewportHeight: 1500
+    defaultCommandTimeout: 25000
+    requestTimeout: 25000
+    watchForFileChanges: false
+    pageLoadTimeout: 45000
+    browser: chrome
+    chromeWebSecurity: false
+  stateFiles: [.orders.json]
+  keepStateFiles: true
+
+workspace:
+  name: random
+  prefix: adyen
+  linkApp:
+    enabled: true
+  installApps: 
+     - vtex.connector-adyen@0.x
+     - vtex.adyen-platforms@0.x
+  removeApps: []
+  wipe:
+    enabled: true
+    stopOnFail: false
+    specs:
+      - cypress/integration/wipe.spec.js
+  teardown:
+    enabled: true
+
+strategy:
+  # # The strategies must be in order, with dependent tests last
+  postSetup:
+    enabled: true
+    sendDashboard: true
+    hardTries: 1
+    stopOnFail: true
+    parallel: false
+    specs:
+      - cypress/integration/post-setup.spec.js
