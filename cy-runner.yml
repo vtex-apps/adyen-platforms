@@ -19,9 +19,9 @@ base:
     enabled: false
     channel: some-channel
   cypress:
-    devMode: true
+    devMode: false
     runHeaded: false
-    projectId: ""
+    projectId: peqpoz
     getCookies: true
     maxJobs: 2
     quiet: true
@@ -44,6 +44,10 @@ base:
 workspace:
   name: random
   prefix: adyen
+  reserveAccount:
+    enabled: true
+    setup:
+      - vtex.orders-broadcast@0.x
   linkApp:
     enabled: true
   installApps: 
@@ -54,7 +58,7 @@ workspace:
     enabled: true
     stopOnFail: false
     specs:
-      - cypress/integration/wipe.spec.js
+      - cypress-shared/integration/adyen/wipe.spec.js
   teardown:
     enabled: true
 
@@ -62,7 +66,7 @@ strategy:
   # # The strategies must be in order, with dependent tests last
   post_setup:
     enabled: true
-    sendDashboard: true
+    sendDashboard: false
     hardTries: 1
     stopOnFail: true
     parallel: false
@@ -70,7 +74,7 @@ strategy:
       - cypress-shared/integration/adyen/post-setup.spec.js
   graphql_tests:
     enabled: true
-    sendDashboard: true
+    sendDashboard: false
     hardTries: 1
     stopOnFail: true
     parallel: false
@@ -80,8 +84,8 @@ strategy:
       - cypress-shared/integration/adyen/post-setup.spec.js
   product_tests:
     enabled: true
-    sendDashboard: true
-    hardTries: 1
+    sendDashboard: false
+    hardTries: 3
     stopOnFail: true
     parallel: true
     specs:
