@@ -44,10 +44,6 @@ base:
 workspace:
   name: random
   prefix: adyen
-  reserveAccount:
-    enabled: true
-    setup:
-      - vtex.orders-broadcast@0.x
   linkApp:
     enabled: true
   installApps: 
@@ -93,6 +89,22 @@ strategy:
       - cypress-shared/integration/adyen/2.3-multiProduct.spec.js
       - cypress-shared/integration/adyen/2.4-discountProduct.spec.js
       - cypress-shared/integration/adyen/2.5-externalSeller.spec.js
+      - cypress-shared/integration/adyen/2.6-discountShipping.spec.js 
       - cypress-shared/integration/adyen/2.7-promotionalProduct.spec.js
     dependency:
       - cypress-shared/integration/adyen/2.1-graphql_testcases.spec.js
+  transaction_api_tests:
+    enabled: true
+    sendDashboard: true
+    hardTries: 3
+    stopOnFail: true
+    parallel: true
+    specs:
+      - cypress-shared/integration/adyen/2.10-transactions.spec.js
+    dependency:
+      - cypress-shared/integration/adyen/2.2-singleProduct.spec.js
+      - cypress-shared/integration/adyen/2.3-multiProduct.spec.js
+      - cypress-shared/integration/adyen/2.4-discountProduct.spec.js
+      - cypress-shared/integration/adyen/2.5-externalSeller.spec.js
+      - cypress-shared/integration/adyen/2.6-discountShipping.spec.js 
+      - cypress-shared/integration/adyen/2.7-promotionalProduct.spec.js
