@@ -38,7 +38,7 @@ base:
     pageLoadTimeout: 45000
     browser: chrome
     chromeWebSecurity: false
-  stateFiles: [.orders.json]
+  stateFiles: [.orders.json,.accountholder.json,.accounttoken.json]
   keepStateFiles: true
 
 workspace:
@@ -96,7 +96,7 @@ strategy:
   transaction_api_tests:
     enabled: true
     sendDashboard: true
-    hardTries: 3
+    hardTries: 2
     stopOnFail: true
     parallel: true
     specs:
