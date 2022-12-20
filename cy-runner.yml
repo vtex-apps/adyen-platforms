@@ -38,7 +38,7 @@ base:
     pageLoadTimeout: 45000
     browser: chrome
     chromeWebSecurity: false
-  stateFiles: [.orders.json, .accountholder.json, .accounttoken.json, .webhook.json, .accountholderCode.json]
+  stateFiles: [.orders.json, .accountholder.json, .accounttoken.json, .webhook.json, .accountholderCode.json, .account.json]
   keepStateFiles: true
 
 workspace:
