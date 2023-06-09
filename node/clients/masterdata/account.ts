@@ -85,6 +85,8 @@ export class Account extends MasterData {
   }
 
   public async find(data: { [key: string]: string }) {
+    await this.checkSchema()
+
     const [key] = Object.keys(data)
 
     return this.searchDocuments<IAdyenAccount>({
@@ -97,6 +99,7 @@ export class Account extends MasterData {
   }
 
   public async findBySellerId(data: string[]) {
+    await this.checkSchema()
     const where = `sellerId=${data.join(' OR sellerId=')}`
 
     return this.searchDocuments<IAdyenAccount>({
@@ -109,6 +112,8 @@ export class Account extends MasterData {
   }
 
   public async all() {
+    await this.checkSchema()
+
     return this.searchDocumentsWithPaginationInfo<IAdyenAccount>({
       dataEntity: DATA_ENTITY,
       fields: ['sellerId', 'accountHolderCode', 'accountCode', 'status'],
