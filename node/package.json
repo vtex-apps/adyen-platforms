@@ -10,7 +10,7 @@
     "@types/co-body": "^0.0.3",
     "@types/node": "^12.0.0",
     "@types/uuid": "^8.3.0",
-    "@vtex/api": "6.45.12",
+    "@vtex/api": "6.45.15",
     "tslint": "^5.12.0",
     "tslint-config-vtex": "^2.1.0",
     "typescript": "3.9.7",

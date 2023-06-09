@@ -7,16 +7,24 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Fixed
+
+- During any masterdata operation, check if schema exists and create it if not
+
 ### Added
+
 - Updated cy-runner.yml file in adyen platforms
 
 ### Added
+
 - cy-runner is added for cypress e2e automation
 
 ### Added
+
 - GitHub Dispatch workflow added
 
 ### Changed
+
 - GitHub reusable workflow uptaded to v2
 
 ## [0.4.1] - 2022-08-22
